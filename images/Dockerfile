@@ -1,0 +1,77 @@
+FROM fedora:32
+
+MAINTAINER Trevor Gamblin <tvgamblin@gmail.com>
+
+RUN \
+    useradd --home-dir /home/builder --uid 1000 --gid 100 --shell /bin/bash builder && \
+    echo "multilib_policy=best" >> /etc/dnf/dnf.conf && \
+    echo "deltarpm=0" >> /etc/dnf/dnf.conf && \
+    dnf -y --noplugins clean all && \
+    dnf -y --noplugins install \
+    SDL-devel \
+    bzip2 \
+    ccache \
+    chrpath \
+    cpio \
+    cpp \
+    curl \
+    diffstat \
+    diffutils \
+    expect \
+    file \
+    findutils \
+    gawk \
+    gcc \
+    gcc-c++ \
+    git \
+    glibc-devel.i686 \
+    glibc-devel.x86_64 \
+    glibc.i686 \
+    glibc-langpack-en.x86_64 \
+    gzip \
+    help2man \
+    hostname \
+    libgcc.i686 \
+    libgcc.x86_64 \
+    libnsl2-devel \
+    make \
+    mesa-libGL \
+    mesa-libGLU \
+    ncurses-libs.i686 \
+    openssh-server \
+    patch \
+    perl \
+    perl-Data-Dumper \
+    perl-Text-ParseWords \
+    perl-Thread-Queue \
+    perl-autodie \
+    perl-bignum \
+    perl-podlators \
+    python2 \
+    python3 \
+    python3-pexpect \
+    python3-pip \
+    rpcgen \
+    socat \
+    screen \
+    subversion \
+    sudo \
+    tar \
+    texi2html \
+    texinfo \
+    time \
+    unzip \
+    wget \
+    which \
+    xz && \
+    dnf --noplugins clean all && \
+    rm -rf /var/cache/dnf && \
+    rm -rf /usr/share/{man,doc,info,gnome/help} && \
+    rm -rf /usr/share/texlive/texmf-dist/{fonts,doc,tex} && \
+    cd /usr/libexec/git-core && \
+    find . -samefile git -name 'git-*' -exec ln -sf git {} \; && \
+    echo "builder ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
+
+USER builder
+
+CMD ["/bin/bash"]
