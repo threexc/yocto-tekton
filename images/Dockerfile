@@ -74,5 +74,4 @@ RUN \
 
 USER builder
 
-ENTRYPOINT ["/entrypoint.sh"]
-
+CMD [ "tail", "-f", "/dev/null" ]
