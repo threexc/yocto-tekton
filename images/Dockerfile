@@ -70,7 +70,7 @@ RUN \
     rm -rf /usr/share/texlive/texmf-dist/{fonts,doc,tex} && \
     cd /usr/libexec/git-core && \
     find . -samefile git -name 'git-*' -exec ln -sf git {} \; && \
-    echo "builder ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
+    echo "builder ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 USER builder
 
