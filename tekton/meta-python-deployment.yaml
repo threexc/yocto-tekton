@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: meta-python-build
+  name: meta-python-build
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: meta-python-build
+  template:
+    metadata:
+      labels:
+        app: meta-python-build
+    spec:
+      containers:
+      - name: meta-python-build
+        image: registry.hub.docker.com/threexc/yocto-builder
+        imagePullPolicy: Always
+        volumeMounts:
+          - mountPath: /workspace
+            name: workspace
+            readOnly: false
+      volumes:
+      - name: workspace
+        hostPath: 
+          path: /forge1/threexc/tekton/builds

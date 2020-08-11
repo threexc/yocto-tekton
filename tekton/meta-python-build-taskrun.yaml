@@ -1,0 +1,15 @@
+apiVersion: tekton.dev/v1beta1
+kind: TaskRun
+metadata:
+  name: buildrun
+spec:
+  taskRef:
+    name: meta-python-build
+  resources:
+    inputs:			
+      - name: poky
+        resourceRef:
+          name: poky-git
+      - name: meta-openembedded
+        resourceRef:
+          name: meta-openembedded-git
