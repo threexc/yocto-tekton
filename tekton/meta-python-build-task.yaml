@@ -24,6 +24,17 @@ spec:
         cd poky && git checkout origin/master-next
         source oe-init-build-env build
         #echo "SSTATE_DIR = \"/workspace/build/sstate-cache-1020\"" >> conf/local.conf
+        cat conf/bblayers.conf
+        echo "BBLAYERS ?= \" \\
+                /workspace/poky/meta \\
+                /workspace/poky/meta-poky \\
+                /workspace/poky/meta-yocto-bsp \\
+                /workspace/meta-openembedded/meta-python \\
+                /workspace/meta-openembedded/meta-oe \\
+                /workspace/meta-openembedded/meta-networking \\
+                /workspace/meta-openembedded/meta-filesystems \\
+                /workspace/meta-openembedded/meta-webserver \\
+                \"" > conf/bblayers.conf
         export LANG=en_US.UTF-8
         # get the latest python recipes and bitbake them
         (cd ../../meta-openembedded/ && git log --pretty=oneline --grep="python" origin/master..origin/master-next | awk '{print $2}' | tr -d :) | xargs bitbake
