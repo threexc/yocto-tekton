@@ -74,4 +74,5 @@ RUN \
 
 USER builder
 
-CMD ["/bin/bash"]
+ENTRYPOINT ["/entrypoint.sh"]
+
