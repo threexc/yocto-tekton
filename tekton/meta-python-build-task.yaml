@@ -3,7 +3,7 @@ apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
   name: yocto-meta-python-build
-  namespace: yocto-build
+  namespace: tekton-pipelines
 spec:
   steps:
     - name: run-build
@@ -11,19 +11,11 @@ spec:
       workingDir: /workspace
       script: |
         #!/bin/bash -xe
-        #ID=$RANDOM
-        #BUILD="/workspace/build/build-$ID"
-        #mkdir -p $BUILD
-        #cd $BUILD
-        #git clone --single-branch --branch $(branch) --depth 1 $(poky_repo)
-        #git clone --single-branch --branch $(branch) --depth 1 $(meta-python_repo)
-        #cd poky && source oe-init-build-env build
         git clone git://git.yoctoproject.org/poky 
         git clone git://git.openembedded.org/meta-openembedded
         (cd meta-openembedded && git checkout origin/master-next)
         cd poky && git checkout origin/master-next
         source oe-init-build-env build
-        #echo "SSTATE_DIR = \"/workspace/build/sstate-cache-1020\"" >> conf/local.conf
         cat conf/bblayers.conf
         echo "BBLAYERS ?= \" \\
                 /workspace/poky/meta \\
