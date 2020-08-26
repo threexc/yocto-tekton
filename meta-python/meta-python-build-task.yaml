@@ -2,7 +2,7 @@
 apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
-  name: yocto-meta-python-build
+  name: meta-python-build
   namespace: tekton-pipelines
 spec:
   steps:
