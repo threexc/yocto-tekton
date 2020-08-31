@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: httpd-sstate
+  namespace: tekton-pipelines
+  labels:
+    app: httpd-sstate
+spec:
+  selector:
+    matchLabels:
+      app: httpd-sstate
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: httpd-sstate
+    spec:
+      containers:
+      - name: x86-64-sstate-pvc
+        image: httpd
+        ports:
+        - containerPort: 80
+          name: http-server
+        imagePullPolicy: Always
+        volumeMounts:
+          - mountPath: /usr/local/apache2/htdocs
+            name: x86-64-sstate-pvc
+      volumes:
+        - name: x86-64-sstate-pvc
+          persistentVolumeClaim:
+           claimName: x86-64-sstate-pvc

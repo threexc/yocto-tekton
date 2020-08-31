@@ -1,0 +1,20 @@
+apiVersion: tekton.dev/v1alpha1
+kind: TaskRun
+metadata:
+  creationTimestamp: null
+  generateName: setup-sstate-x86-64-run-
+  namespace: tekton-pipelines
+spec:
+  inputs: {}
+  outputs: {}
+  serviceAccountName: ""
+  taskRef:
+    name: setup-sstate-x86-64
+  timeout: 4h0m0s
+  podTemplate:
+    volumes:
+    - name: build
+      hostPath:
+        path: /forge1/sstate/qemux86-64
+status:
+  podName: ""

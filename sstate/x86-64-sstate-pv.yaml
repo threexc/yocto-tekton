@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: x86-64-sstate-pv
+  namespace: tekton-pipelines
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 200Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/forge1/sstate/qemux86-64"
