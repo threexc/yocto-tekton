@@ -24,11 +24,9 @@ spec:
       workingDir: /workspace
       script: |
         #!/bin/bash -xe
-        pwd
-        ls
         cd poky
         source oe-init-build-env build
-        bitbake core-image-sato
+        bitbake core-image-full-cmdline
       volumeMounts:
       - name: build
         mountPath: /workspace

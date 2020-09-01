@@ -1,0 +1,21 @@
+apiVersion: tekton.dev/v1alpha1
+kind: TaskRun
+metadata:
+  creationTimestamp: null
+  generateName: sstate-build-test-run-
+  namespace: tekton-pipelines
+spec:
+  inputs: {}
+  outputs: {}
+  serviceAccountName: ""
+  taskRef:
+    name: sstate-build-test
+  timeout: 2h0m0s
+  podTemplate:
+    volumes:
+    - name: build
+      hostPath:
+        path: /tekton/sstate-test
+
+status:
+  podName: ""
