@@ -1,0 +1,12 @@
+FROM ubuntu:latest
+
+RUN apt-get update
+RUN apt-get install -y \
+    dnsutils \
+    curl \
+    iftop \
+    vnstat \
+    hping3 \
+    nmap \
+    tcpdump
+RUN	apt-get clean && rm -rf /var/lib/apt/lists
