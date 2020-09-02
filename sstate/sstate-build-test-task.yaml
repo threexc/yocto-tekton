@@ -19,6 +19,7 @@ spec:
                 /workspace/poky/meta-yocto-bsp \\
                 \"" > conf/bblayers.conf
         echo "SSTATE_MIRRORS = \"file://.* http://httpd-sstate.tekton-pipelines/poky/build/sstate-cache/PATH\"" >> conf/local.conf
+        echo "USER_CLASSES += \"buildstats buildstats-summary\"" >> conf/local.conf
         echo "IMAGE_INSTALL_append = \" python3-numpy\"" >> conf/local.conf
         export LANG=en_US.UTF-8
         bitbake core-image-full-cmdline
