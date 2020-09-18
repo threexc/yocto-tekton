@@ -23,7 +23,7 @@ spec:
       workingDir: /workspace
       script: |
         #!/bin/bash -xe
-        (cd poky && git checkout master && git pull --rebase)
+        (cd poky && git checkout master-next && git pull --rebase)
       volumeMounts:
       - name: build
         mountPath: /workspace
