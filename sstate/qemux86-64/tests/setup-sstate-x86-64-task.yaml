@@ -12,9 +12,10 @@ spec:
       script: |
         #!/bin/bash -xe
         if [ -d poky ]; then
-            rm -rf poky
+            cd poky && git pull --rebase
+        else
+            git clone git://git.yoctoproject.org/poky
         fi
-        git clone git://git.yoctoproject.org/poky
       volumeMounts:
       - name: build
         mountPath: /workspace
@@ -26,7 +27,7 @@ spec:
         #!/bin/bash -xe
         cd poky
         source oe-init-build-env build
-        bitbake core-image-full-cmdline
+        bitbake -k world
       volumeMounts:
       - name: build
         mountPath: /workspace
