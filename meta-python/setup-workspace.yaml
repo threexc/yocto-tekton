@@ -24,8 +24,6 @@ spec:
       workingDir: /workspace
       script: |
         #!/bin/bash -xe
-        #(cd poky && git branch && git pull && git reset --hard origin/master-next)
-        #(cd meta-openembedded && git branch && git pull && git reset --hard origin/master-next)
         (cd poky && git checkout master-next && git pull --rebase)
         (cd meta-openembedded && git checkout master-next && git pull --rebase)
       volumeMounts:
