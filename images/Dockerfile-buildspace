@@ -31,6 +31,8 @@ RUN \
     gzip \
     help2man \
     hostname \
+    iproute \
+    iputils \
     libgcc.i686 \
     libgcc.x86_64 \
     libnsl2-devel \
@@ -47,6 +49,7 @@ RUN \
     perl-autodie \
     perl-bignum \
     perl-podlators \
+    procps-ng \
     python2 \
     python3 \
     python3-pexpect \
