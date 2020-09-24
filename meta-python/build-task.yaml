@@ -27,7 +27,8 @@ spec:
         echo "USER_CLASSES += \"buildstats buildstats-summary\"" >> conf/local.conf
         export LANG=en_US.UTF-8
         # get the latest python recipes and bitbake them
-        (cd ../../meta-openembedded/ && git log --pretty=oneline --grep="python" origin/master..origin/master-next | awk '{print $2}' | tr -d :) | xargs bitbake
+        RECIPES=$(cd ../../meta-openembedded/ && git log --pretty=oneline --grep="python" origin/master..origin/master-next | awk '{print $2}' | tr -d :)
+        bitbake $RECIPES
       volumeMounts:
       - name: build
         mountPath: /workspace
