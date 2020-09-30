@@ -11,7 +11,7 @@
      ready
    - Current concept - deployment with pods running an image that
      contains a simple scheduler written in Go, takes queue requests
-     (something based on [this](https://cloud.google.com/appengine/docs standard/go111/taskqueue/push/example)?)
+     (something based on [this](https://cloud.google.com/appengine/docs/standard/go111/taskqueue/push/example)?)
 5. Look into recording for slide content
    - Screenshots may be simpler for some cases?
 6. Figure out QEMU with kvm in Docker, add to build pipeline and run meta-python-ptest-image
