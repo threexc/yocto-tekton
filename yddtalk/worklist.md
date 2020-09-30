@@ -33,29 +33,29 @@
 7. Tekton Overview
    - Compare with other tools
 8. The Single-Machine Kubernetes Cluster With kubeadm
-     - Hardware Specifications Used
-     - Underlying OS
-     - Setup Instructions - Quick Peek
-     - Notes about variety of options
-     - Mention Flannel, CoreDNS, CNI plugins fix
+   - Hardware Specifications Used
+   - Underlying OS
+   - Setup Instructions - Quick Peek
+   - Notes about variety of options
+   - Mention Flannel, CoreDNS, CNI plugins fix
 9. Tekton in Action
    - Fast-forwarded video of meta-python pipeline (or screenshots)
 10. Application to meta-python maintenance
-     - Mention limitations, e.g. problems with commit message syntax,
-       need to set up QEMU in container to add to pipeline (if this has
-       not been completed)
-     - Show Dashboard Contents
+    - Mention limitations, e.g. problems with commit message syntax,
+      need to set up QEMU in container to add to pipeline (if this has
+      not been completed)
+    - Show Dashboard Contents
 11. Thoughts on Other Layers
-   - poky as a whole should be easy
-   - Figure out method for meta-oe, meta-networking if possible
+    - poky as a whole should be easy
+    - Figure out method for meta-oe, meta-networking if possible
 12. Faster Builds - The Shared State Deployment
-   - Performance on small/low power systems with a Full Shared State
-     Cache
-   - Explain PV, PVC
+    - Performance on small/low power systems with a Full Shared State
+      Cache
+    - Explain PV, PVC
 13. AWS Usage?
 14. Useful Tools
-   - k9s
-   - Helm
+    - k9s
+    - Helm
 15. Future Plans
 16. - Benchmark compilation like Openbenchmarking, KernelCI Dashboard, etc.
 17. Where to Find Content
