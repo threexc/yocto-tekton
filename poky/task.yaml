@@ -1,0 +1,52 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: poky-setup-workspace
+  namespace: tekton-pipelines
+spec:
+  steps:
+    - name: create-workspace
+      image: registry.hub.docker.com/threexc/yocto-builder
+      workingDir: /workspace
+      script: |
+        #!/bin/bash -xe
+        if [ ! -d poky ]; then
+            git clone git://git.yoctoproject.org/poky
+        fi
+      volumeMounts:
+      - name: build
+        mountPath: /workspace
+
+    - name: update-workspace
+      image: registry.hub.docker.com/threexc/yocto-builder
+      workingDir: /workspace
+      script: |
+        #!/bin/bash -xe
+        (cd poky && git checkout master-next && git pull --rebase)
+      volumeMounts:
+      - name: build
+        mountPath: /workspace
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: poky-build
+  namespace: tekton-pipelines
+spec:
+  steps:
+    - name: run-build
+      image: registry.hub.docker.com/threexc/yocto-builder
+      workingDir: /workspace/poky
+      script: |
+        #!/bin/bash -xe
+        source oe-init-build-env build
+        echo "SSTATE_MIRRORS = \"file://.* http://httpd-sstate.tekton-pipelines/poky/build/sstate-cache/PATH\"" >> conf/local.conf
+        echo "USER_CLASSES += \"buildstats buildstats-summary\"" >> conf/local.conf
+        export LANG=en_US.UTF-8
+        # get the latest recipe updates and bitbake them
+        RECIPES=$(cd .. && git log --pretty=oneline origin/master..origin/master-next | awk '{print $2}' | tr -d :)
+        bitbake $RECIPES
+      volumeMounts:
+      - name: build
+        mountPath: /workspace

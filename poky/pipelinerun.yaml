@@ -1,0 +1,16 @@
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineRun
+metadata:
+  creationTimestamp: null
+  generateName: poky-build-pipeline-run-
+  namespace: tekton-pipelines
+spec:
+  pipelineRef:
+    name: poky-build-pipeline
+  timeout: 1h0m0s
+  podTemplate:
+    volumes:
+    - name: build
+      hostPath:
+        path: /tekton/data
+status: {}
