@@ -25,39 +25,39 @@
 1. Welcome
 2. - Names, roles, companies, etc.
 3. Yocto CI/CD Intro
-4. - Autobuilder
-5. - Other solutions in use by maintainers, users, etc.
-6. K8S Overview
+   - Autobuilder
+   - Other solutions in use by maintainers, users, etc.
+4. K8S Overview
    - Links to tutorials?
    - Advantages over bare metal
-7. Tekton Overview
+5. Tekton Overview
    - Compare with other tools
-8. The Single-Machine Kubernetes Cluster With kubeadm
+6. The Single-Machine Kubernetes Cluster With kubeadm
    - Hardware Specifications Used
    - Underlying OS
    - Setup Instructions - Quick Peek
    - Notes about variety of options
    - Mention Flannel, CoreDNS, CNI plugins fix
-9. Tekton in Action
+7. Tekton in Action
    - Fast-forwarded video of meta-python pipeline (or screenshots)
-10. Application to meta-python maintenance
+8. Application to meta-python maintenance
     - Mention limitations, e.g. problems with commit message syntax,
       need to set up QEMU in container to add to pipeline (if this has
       not been completed)
     - Show Dashboard Contents
-11. Thoughts on Other Layers
+9. Thoughts on Other Layers
     - poky as a whole should be easy
     - Figure out method for meta-oe, meta-networking if possible
-12. Faster Builds - The Shared State Deployment
+10. Faster Builds - The Shared State Deployment
     - Performance on small/low power systems with a Full Shared State
       Cache
     - Explain PV, PVC
-13. AWS Usage?
-14. Useful Tools
+11. AWS Usage?
+12. Useful Tools
     - k9s
     - Helm
-15. Future Plans
+13. Future Plans
     - Benchmark compilation like Openbenchmarking, KernelCI Dashboard, etc.
-17. Where to Find Content
+14. Where to Find Content
     - GitHub source
-18. Questions?
+15. Questions?
