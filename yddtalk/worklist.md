@@ -57,7 +57,7 @@
     - k9s
     - Helm
 15. Future Plans
-16. - Benchmark compilation like Openbenchmarking, KernelCI Dashboard, etc.
+    - Benchmark compilation like Openbenchmarking, KernelCI Dashboard, etc.
 17. Where to Find Content
     - GitHub source
 18. Questions?
