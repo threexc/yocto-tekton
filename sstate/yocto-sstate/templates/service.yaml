@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels: {{- include "yocto-sstate.labels" . | nindent 4 }}
+  name: {{ include "yocto-sstate.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  ports:
+  - name: http
+    port: {{ .Values.service.port }}
+    protocol: TCP
+    targetPort: {{ .Values.service.targetPort }}
+  selector: {{- include "yocto-sstate.selectorLabels" . | nindent 4 }}
+  type: {{ .Values.service.type }}

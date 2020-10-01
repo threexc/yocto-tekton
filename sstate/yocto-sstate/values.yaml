@@ -1,0 +1,22 @@
+# Default values for yocto-sstate.
+
+replicaCount: 1
+
+image:
+  repository: httpd
+  pullPolicy: Always
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "latest"
+
+service:
+  type: NodePort
+  port: 80
+  targetPort: 80
+
+pv:
+  size: 200Gi
+  path: /forge1/sstate
+
+pvc:
+  size: 200Gi
+
