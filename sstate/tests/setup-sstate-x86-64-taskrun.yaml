@@ -15,6 +15,6 @@ spec:
     volumes:
     - name: build
       hostPath:
-        path: /forge1/sstate/qemux86-64
+        path: /forge1/sstate
 status:
   podName: ""
