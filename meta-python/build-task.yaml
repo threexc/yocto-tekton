@@ -25,6 +25,10 @@ spec:
                 \"" > conf/bblayers.conf
         echo "SSTATE_MIRRORS = \"file://.* http://yocto-sstate.tekton-pipelines/poky/build/sstate-cache/PATH\"" >> conf/local.conf
         echo "USER_CLASSES += \"buildstats buildstats-summary\"" >> conf/local.conf
+        echo "DISTRO_FEATURES_append = \" systemd\"" >> conf/local.conf
+        echo "DISTRO_FEATURES_BACKFILL_CONSIDERED += \"sysvinit\"" >> conf/local.conf
+        echo "VIRTUAL-RUNTIME_init_manager = \"systemd\"" >> conf/local.conf
+        echo "VIRTUAL-RUNTIME_initscripts = \"systemd-compat-units\"" >> conf/local.conf
         export LANG=en_US.UTF-8
         # get the latest python recipes and bitbake them
         RECIPES=$(cd ../../meta-openembedded/ && git log --pretty=oneline --grep="python" origin/master..origin/master-next | awk '{print $2}' | tr -d :)
