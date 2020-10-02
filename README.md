@@ -6,4 +6,4 @@ at http://cgit.openembedded.org/meta-openembedded). It also serves as a
 set of examples for setting up and creating such a pipeline using
 Docker, Kubernetes, and Tekton.
 
-Maintainer: Trevor Gamblin <tvgamblin@gmail.com>
+Maintainer: Trevor Gamblin <trevor.gamblin@windriver.com>
