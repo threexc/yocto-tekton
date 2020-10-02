@@ -1,0 +1,20 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerTemplate
+metadata:
+  name: meta-python-build-template
+  namespace: tekton-pipelines
+spec:
+  resourcetemplates:
+  - apiVersion: tekton.dev/v1beta1
+    kind: PipelineRun
+    metadata:
+      generateName: meta-python-build-pipeline-run-
+    spec:
+      pipelineRef:
+        name: meta-python-build-pipeline
+      timeout: "3h"
+      podTemplate:
+        volumes:
+        - name: build
+          hostPath:
+            path: /tekton/data
