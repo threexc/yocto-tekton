@@ -12,5 +12,5 @@ spec:
     volumes:
     - name: build
       hostPath:
-        path: /tekton/sstate-test
+        path: /forge1/sstate
 status: {}
