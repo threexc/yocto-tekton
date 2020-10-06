@@ -3,7 +3,7 @@ kind: CronJob
 metadata:
   name: meta-python-cronjob
 spec:
-  schedule: "0 0 * * *"
+  schedule: "0 4 * * *"
   jobTemplate:
     spec:
       template:
