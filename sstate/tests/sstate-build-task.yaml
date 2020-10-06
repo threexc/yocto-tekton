@@ -2,11 +2,11 @@
 apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
-  name: setup-sstate-x86-64
+  name: sstate-build
   namespace: tekton-pipelines
 spec:
   steps:
-    - name: setup
+    - name: setup-repo
       image: registry.hub.docker.com/threexc/yocto-builder
       workingDir: /workspace
       script: |

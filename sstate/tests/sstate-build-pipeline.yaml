@@ -1,0 +1,10 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: sstate-build-pipeline
+  namespace: tekton-pipelines
+spec:
+  tasks:
+  - name: build-sstate
+    taskRef:
+      name: build-sstate

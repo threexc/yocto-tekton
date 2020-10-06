@@ -2,11 +2,11 @@ apiVersion: tekton.dev/v1alpha1
 kind: PipelineRun
 metadata:
   creationTimestamp: null
-  generateName: sstate-build-test-pipeline-run-
+  generateName: sstate-build-pipeline-run-
   namespace: tekton-pipelines
 spec:
   pipelineRef:
-    name: sstate-build-test-pipeline
+    name: sstate-build-pipeline
   timeout: 1h0m0s
   podTemplate:
     volumes:
