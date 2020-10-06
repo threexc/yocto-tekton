@@ -2,7 +2,7 @@
 apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
-  name: sstate-build
+  name: build-sstate
   namespace: tekton-pipelines
 spec:
   steps:
