@@ -45,7 +45,7 @@ spec:
         echo "USER_CLASSES += \"buildstats buildstats-summary\"" >> conf/local.conf
         export LANG=en_US.UTF-8
         # get the latest recipe updates and bitbake them
-        RECIPES=$(cd .. && git log --pretty=oneline origin/master..origin/master-next | awk '{print $2}' | tr -d :)
+        RECIPES=$(cd ../ && git log --oneline --name-only origin/master..origin/master-next | grep .bb | grep -v ".bbclass" | sort -u | uniq | awk -F'/' '{print $4}' | awk -F'_' '{print $1}')
         bitbake $RECIPES
       volumeMounts:
       - name: build

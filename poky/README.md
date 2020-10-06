@@ -1,8 +1,6 @@
 ## Instructions
 
-This pipeline prototype is currently non-functional, except for the
-unique circumstance where all of the commit subject lines between
-origin/master and origin/master-next are all submitted in the format 
-"<packagename>: <short description>". We are actively looking at making
-the recipe list acquisition more sophisticated, e.g. by looking at the
-filenames for files altered in patches or something similar.
+This is a limited functionality poky pipeline - it will grab the names
+of recipes changed between origin/master and origin/master-next, and
+build those as long as the recipe filename (once the version number has
+been stripped) matches the actual recipe name.
