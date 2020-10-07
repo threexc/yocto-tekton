@@ -12,3 +12,8 @@ following command:
 
 Where <deployment_name> can be whatever you'd like (meta-python expects
 it to be "yocto-sstate" by default).
+
+### Notes/Lessons Learned
+
+- Helm doesn't like "generateName" fields:
+  https://github.com/helm/helm/issues/3348
