@@ -1,0 +1,15 @@
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineRun
+metadata:
+  name: {{ include "yocto-sstate.fullname" . }}-pipeline-run
+  namespace: {{ .Release.Namespace }}
+spec:
+  pipelineRef:
+    name: {{ include "yocto-sstate.fullname" . }}-pipeline
+  timeout: 1h0m0s
+  podTemplate:
+    volumes:
+    - name: build
+      hostPath:
+        path: "{{ .Values.pv.path }}"
+status: {}

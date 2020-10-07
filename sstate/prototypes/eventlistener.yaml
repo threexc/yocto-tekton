@@ -1,0 +1,13 @@
+---
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: EventListener
+metadata:
+  name: {{ include "yocto-sstate.fullname" . }}-listener
+  namespace: {{ .Release.Namespace }}
+spec:
+  serviceAccountName: {{ include "yocto-sstate.fullname" . }}-sa
+  serviceType: NodePort
+  triggers:
+    - name: build-{{ include "yocto-sstate.fullname" . }}
+      template:
+        name: {{ include "yocto-sstate.fullname" . }}-build-template
