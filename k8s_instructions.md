@@ -6,7 +6,7 @@
   guide](https://golang.org/doc/install)
 - Ability to use `sudo`
 - Docker, or a similar containerization tool (may need additional
-  configuration)
+  configuration). See "Setting Up Docker on Fedora 32"
 
 ### Instructions
 
@@ -28,11 +28,18 @@ so that the network pods run
 12. Install [Helm](https://helm.sh/docs/intro/install/)
 13. (Recommended) Get the Tekton CLI: `https://tekton.dev/docs/cli/`
 14. (Recommended) Install k9s: `go get -u github.com/derailed/k9s`
-14. For quickly making deployed services accessible remotely, do
-    `kubectl edit svc <servicename> -n <namespace>` (e.g. `kubectl edit
-svc tekton-dashboard -n tekton-pipelines`), search for a line that says
-`type: ClusterIP` and change it to say `type: NodePort`, then save and
-check the status of the service. It should now have a port in the 30000+
-range that you can access using `<IP>:<PORT>` in your browser from
-machines on the same network as the node.
 
+### Setting up Docker on Fedora 32
+
+The following instructions only apply if you want to closely match the
+OS configuration used for the original cluster, i.e. you want to use k8s
+with **Docker** on Fedora 32. For other systems, you should follow
+equivalent instructions (if you can't install from the package manager).
+Other container runtimes are currently untested, but information about
+configuration needed e.g. for podman would be greatly appreciated!
+
+1. sudo grubby --update-kernel=ALL --args="systemd.unified_cgroup_hierarchy=0"
+2. Reboot the system
+3. Follow the instructions at
+   [https://computingforgeeks.com/how-to-install-docker-on-fedora/](Computing
+for Geeks) to install Docker Community Edition.
