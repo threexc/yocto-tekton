@@ -18,3 +18,6 @@ spec:
         - name: build
           hostPath:
             path: /tekton/data
+        - name: log
+          hostPath:
+            path: /tekton/data/logs
