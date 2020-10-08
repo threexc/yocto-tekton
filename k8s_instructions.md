@@ -38,8 +38,8 @@ equivalent instructions (if you can't install from the package manager).
 Other container runtimes are currently untested, but information about
 configuration needed e.g. for podman would be greatly appreciated!
 
-1. sudo grubby --update-kernel=ALL --args="systemd.unified_cgroup_hierarchy=0"
+1. `sudo grubby --update-kernel=ALL --args="systemd.unified_cgroup_hierarchy=0"`
 2. Reboot the system
-3. Follow the instructions at
-   [https://computingforgeeks.com/how-to-install-docker-on-fedora/](Computing
-for Geeks) to install Docker Community Edition.
+3. Follow the instructions at [Computing for Geeks](https://computingforgeeks.com/how-to-install-docker-on-fedora) 
+for setting up Docker Community Edition on Fedora 32.
+
