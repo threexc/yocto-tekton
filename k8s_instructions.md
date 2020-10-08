@@ -2,7 +2,8 @@
 
 ### Prerequisites
 
-- A fully-configured Go development environment
+- A fully-configured Go development environment [see the installation
+  guide](https://golang.org/doc/install)
 - Ability to use `sudo`
 - Docker, or a similar containerization tool (may need additional
   configuration)

@@ -1,11 +1,3 @@
-## Basic Structure
-
-1. setup-workspace clones poky and meta-openembedded if they aren't
-   already present, then pulls the latest patches for master and
-   master-next respectively;
-2. build-task grabs the module names from the subject lines of the
-   master-next commit messages and passes them to bitbake.
-
 ## Usage Instructions
 
 1. (Optional) Prepare the sstate deployment;
