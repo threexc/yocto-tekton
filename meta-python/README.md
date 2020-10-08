@@ -1,6 +1,12 @@
 ## Usage Instructions
 
-1. (Optional) Prepare the sstate deployment;
+**Note:** The triggertemplate.yaml, log-task-run.yaml,
+build-task-run.yaml, setup-workspace-task-run.yaml, and
+pipeline-run.yaml files have hard-coded paths in them at the moment
+which are specific to the author's system. You'll need to change them
+(or create the same paths) for them to work!
+
+1. (Optional) Prepare the [sstate deployment](../sstate/README.md)
 2. `kubectl apply -f` the following:
    1. setup-workspace.yaml
    2. build-task.yaml
