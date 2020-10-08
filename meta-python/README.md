@@ -12,12 +12,13 @@
 2. `kubectl apply -f` the following:
    1. setup-workspace.yaml
    2. build-task.yaml
-   3. pipeline.yaml
-   4. eventlistener.yaml
-   5. serviceaccount.yaml
-   6. triggertemplate.yaml
-   7. triggerbinding.yaml
-   8. cronjob.yaml
+   3. log-task.yaml
+   4. pipeline.yaml
+   5. eventlistener.yaml
+   6. serviceaccount.yaml
+   7. triggertemplate.yaml
+   8. triggerbinding.yaml
+   9. cronjob.yaml
 3. `kubectl create -f` the following for **manual** runs:
    1. pipeline-run.yaml
    2. (Only to run the individual tasks) "-run.yaml" files. This is
