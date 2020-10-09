@@ -46,7 +46,7 @@ spec:
       script: |
         #!/bin/bash -xe
         if [ ! -d build/conf/ ]; then
-          source oe-init-build env build
+          source oe-init-build-env build
           echo "BBLAYERS ?= \" \\
                   /workspace/poky/meta \\
                   /workspace/poky/meta-poky \\
@@ -59,10 +59,11 @@ spec:
                   \"" > conf/bblayers.conf
           echo "SSTATE_MIRRORS = \"file://.* http://yocto-sstate.tekton-pipelines/poky/build/sstate-cache/PATH\"" >> conf/local.conf
           echo "USER_CLASSES += \"buildstats buildstats-summary\"" >> conf/local.conf
-          echo "DISTRO_FEATURES_append = \" systemd\"" >> conf/local.conf
+          echo "DISTRO_FEATURES_append = \" systemd pam\"" >> conf/local.conf
           echo "DISTRO_FEATURES_BACKFILL_CONSIDERED += \"sysvinit\"" >> conf/local.conf
           echo "VIRTUAL-RUNTIME_init_manager = \"systemd\"" >> conf/local.conf
           echo "VIRTUAL-RUNTIME_initscripts = \"systemd-compat-units\"" >> conf/local.conf
+          echo "INHERIT += \" testimage\"" >> conf/local.conf
           echo "QEMU_USE_SLIRP = \"1\"" >> conf/local.conf
         fi
       volumeMounts:
