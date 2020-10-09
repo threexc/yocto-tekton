@@ -12,23 +12,6 @@ spec:
       script: |
         #!/bin/bash -xe
         source oe-init-build-env build
-        cat conf/bblayers.conf
-        echo "BBLAYERS ?= \" \\
-                /workspace/poky/meta \\
-                /workspace/poky/meta-poky \\
-                /workspace/poky/meta-yocto-bsp \\
-                /workspace/meta-openembedded/meta-python \\
-                /workspace/meta-openembedded/meta-oe \\
-                /workspace/meta-openembedded/meta-networking \\
-                /workspace/meta-openembedded/meta-filesystems \\
-                /workspace/meta-openembedded/meta-webserver \\
-                \"" > conf/bblayers.conf
-        echo "SSTATE_MIRRORS = \"file://.* http://yocto-sstate.tekton-pipelines/poky/build/sstate-cache/PATH\"" >> conf/local.conf
-        echo "USER_CLASSES += \"buildstats buildstats-summary\"" >> conf/local.conf
-        echo "DISTRO_FEATURES_append = \" systemd\"" >> conf/local.conf
-        echo "DISTRO_FEATURES_BACKFILL_CONSIDERED += \"sysvinit\"" >> conf/local.conf
-        echo "VIRTUAL-RUNTIME_init_manager = \"systemd\"" >> conf/local.conf
-        echo "VIRTUAL-RUNTIME_initscripts = \"systemd-compat-units\"" >> conf/local.conf
         export LANG=en_US.UTF-8
         # get the latest python recipes and bitbake them
         RECIPES=$(cd ../../meta-openembedded/ && git log --pretty=oneline --grep="python" origin/master..origin/master-next | awk '{print $2}' | tr -d :)

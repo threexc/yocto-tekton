@@ -6,6 +6,17 @@ metadata:
   namespace: tekton-pipelines
 spec:
   steps:
+    - name: clear-old-workspace
+      image: registry.hub.docker.com/threexc/yocto-builder
+      workingDir: /workspace/poky
+      script: |
+        #!/bin/bash -xe
+        if [ -d build/tmp ]; then
+            rm -rf build/tmp
+        fi
+      volumeMounts:
+      - name: build
+        mountPath: /workspace
     - name: create-workspace
       image: registry.hub.docker.com/threexc/yocto-builder
       workingDir: /workspace
@@ -26,6 +37,34 @@ spec:
         #!/bin/bash -xe
         (cd poky && git checkout master && git pull --rebase)
         (cd meta-openembedded && git checkout master-next && git pull --rebase)
+      volumeMounts:
+      - name: build
+        mountPath: /workspace
+    - name: setup-conf
+      image: registry.hub.docker.com/threexc/yocto-builder
+      workingDir: /workspace/poky
+      script: |
+        #!/bin/bash -xe
+        if [ ! -d build/conf/ ]; then
+          source oe-init-build env build
+          echo "BBLAYERS ?= \" \\
+                  /workspace/poky/meta \\
+                  /workspace/poky/meta-poky \\
+                  /workspace/poky/meta-yocto-bsp \\
+                  /workspace/meta-openembedded/meta-python \\
+                  /workspace/meta-openembedded/meta-oe \\
+                  /workspace/meta-openembedded/meta-networking \\
+                  /workspace/meta-openembedded/meta-filesystems \\
+                  /workspace/meta-openembedded/meta-webserver \\
+                  \"" > conf/bblayers.conf
+          echo "SSTATE_MIRRORS = \"file://.* http://yocto-sstate.tekton-pipelines/poky/build/sstate-cache/PATH\"" >> conf/local.conf
+          echo "USER_CLASSES += \"buildstats buildstats-summary\"" >> conf/local.conf
+          echo "DISTRO_FEATURES_append = \" systemd\"" >> conf/local.conf
+          echo "DISTRO_FEATURES_BACKFILL_CONSIDERED += \"sysvinit\"" >> conf/local.conf
+          echo "VIRTUAL-RUNTIME_init_manager = \"systemd\"" >> conf/local.conf
+          echo "VIRTUAL-RUNTIME_initscripts = \"systemd-compat-units\"" >> conf/local.conf
+          echo "QEMU_USE_SLIRP = \"1\"" >> conf/local.conf
+        fi
       volumeMounts:
       - name: build
         mountPath: /workspace
