@@ -9,8 +9,8 @@ but it continues to evolve to support other layers and related
 processes, in addition to serving as a set of examples for building
 pipelines with Docker, k8s, and Tekton.
 
-See the [instructions for configuring a k8s
-cluster](k8s_instructions.md) to get started, or view each directory's
+See the instructions for configuring a k8s
+cluster below to get started, or view each directory's
 README.md to learn more about what they do.
 
 Maintainer: Trevor Gamblin <trevor.gamblin@windriver.com>
