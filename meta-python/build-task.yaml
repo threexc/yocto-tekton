@@ -14,8 +14,12 @@ spec:
         source oe-init-build-env build
         export LANG=en_US.UTF-8
         # get the latest python recipes and bitbake them
-        RECIPES=$(cd ../../meta-openembedded/ && git log --pretty=oneline --grep="python" origin/master..origin/master-next | awk '{print $2}' | tr -d :)
-        bitbake $RECIPES
+        COMMIT_LOG=$(cd ../../meta-openembedded/ && git log --pretty=oneline --grep="python" origin/master..origin/master-next)
+        BUILD_RECIPES=$(echo "${COMMIT_LOG}" | awk '{print $2}' | tr -d : | grep "python")
+        UNBUILT_LOG=$(cd ../../meta-openembedded && git log --pretty=oneline --grep="python" --format="%h: %s" origin/master..origin/master-next | grep -v -E '[[:alnum:]]+: python3')
+        bitbake ${BUILD_RECIPES}
+        echo "The following patches were not addressed: "
+        echo "${UNBUILT_LOG}"
       volumeMounts:
       - name: build
         mountPath: /workspace
