@@ -43,7 +43,7 @@ so that the network pods run
 10. Install Tekton Triggers: `kubectl apply --filename https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml`
 11. Install Tekton Dashboard: `kubectl apply --filename https://github.com/tektoncd/dashboard/releases/latest/download/tekton-dashboard-release.yaml`
 12. Install [Helm](https://helm.sh/docs/intro/install/)
-13. (Recommended) Get the Tekton CLI: `https://tekton.dev/docs/cli/`
+13. (Recommended) Get the [Tekton CLI](https://tekton.dev/docs/cli/)
 14. (Recommended) Install k9s: `go get -u github.com/derailed/k9s`
 
 ### Setting up Docker on Fedora 32
