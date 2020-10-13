@@ -60,3 +60,42 @@ configuration needed e.g. for podman would be greatly appreciated!
 3. Follow the instructions at [Computing for Geeks](https://computingforgeeks.com/how-to-install-docker-on-fedora) 
 for setting up Docker Community Edition on Fedora 32.
 
+### Frequently Asked Questions
+
+1. **Why Use kubeadm and not Minikube (or another tool)?**
+
+Minikube is great for getting one's feet wet with Kubernetes and Tekton,
+but the extra work required to expand it to a more versatile cluster
+using more of the production-ready resources available to the community
+made it unviable for this project. kubeadm was the first of the
+alternatives that the developers had success with, and the documentation
+is reasonably plentiful. That being said, if you would like to try out
+the resources found here on another platform, we would appreciate any
+information about additional setup requirements and quirks.
+
+2. **Why Turn Off Swap For Kubernetes?**
+
+This is a complicated topic, but basically it seems that if swap were to
+be enabled, it'd be much harder to guarantee consistent performance for
+k8s pods. In lieu of swap, pods should have their resource requirements
+met ahead of time. It is possible to run with swap by using the
+`--fail-swap-on=false` flag when first configuring the cluster, but sane
+and stable results are not guaranteed. See [this
+link](https://github.com/kubernetes/kubernetes/issues/53533) for more
+info.
+
+3. **How Can I Contribute?**
+
+The yocto-tekton project is still in the early stages and much is still
+being decided, but if you're interested in helping out, you could do one
+or more of the following (as examples):
+
+   - Test out the setup and usage instructions and report any
+     inconsistencies or problems you encounter
+   - Experiment with other k8s services, container runtimes, etc.
+   - Assist in making the tasks run as part of the meta-python and poky
+     pipelines more robust
+
+Submitting pull requests, and/or discussing via opening issues are the
+best avenues right now. You can also reach Trevor via the `tgamblin`
+username on Freenode IRC, or at `trevor.gamblin@windriver.com`.
