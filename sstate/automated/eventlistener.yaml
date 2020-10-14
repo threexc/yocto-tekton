@@ -1,0 +1,13 @@
+---
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: EventListener
+metadata:
+  name: sstate-build-listener
+  namespace: tekton-pipelines
+spec:
+  serviceAccountName: tekton-triggers-sa
+  serviceType: NodePort
+  triggers:
+    - name: sstate-build
+      template:
+        name: sstate-build-template

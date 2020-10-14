@@ -5,6 +5,6 @@ metadata:
   namespace: tekton-pipelines
 spec:
   tasks:
-  - name: build-sstate
+  - name: sstate-build
     taskRef:
-      name: build-sstate
+      name: sstate-build

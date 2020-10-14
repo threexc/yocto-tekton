@@ -1,0 +1,19 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: sstate-build-cronjob
+  namespace: tekton-pipelines
+spec:
+  schedule: "0 8 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: sstate-build-nettools
+            image: threexc/nettools
+            args:
+            - /bin/bash
+            - -c
+            - curl -X POST http://el-sstate-build-listener.tekton-pipelines.svc.cluster.local:8080
+          restartPolicy: OnFailure

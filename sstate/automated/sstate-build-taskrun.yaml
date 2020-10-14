@@ -9,7 +9,7 @@ spec:
   outputs: {}
   serviceAccountName: ""
   taskRef:
-    name: build-sstate
+    name: sstate-build
   timeout: 2h0m0s
   podTemplate:
     volumes:
