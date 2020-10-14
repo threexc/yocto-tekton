@@ -8,16 +8,16 @@ spec:
   steps:
     - name: run-build
       image: registry.hub.docker.com/threexc/yocto-builder
-      workingDir: /workspace/poky
+      workingDir: /workspace
       script: |
         #!/bin/bash -xe
-        source oe-init-build-env build
+        cd poky && source oe-init-build-env build
         export LANG=en_US.UTF-8
         # get the latest python recipes and bitbake them
         COMMIT_LOG=$(cd ../../meta-openembedded/ && git log --pretty=oneline --grep="python" origin/master..origin/master-next)
         BUILD_RECIPES=$(echo "${COMMIT_LOG}" | awk '{print $2}' | tr -d : | grep "python")
-        UNBUILT_LOG=$(cd ../../meta-openembedded && git log --pretty=oneline --grep="python" --format="%h: %s" origin/master..origin/master-next | grep -v -E '[[:alnum:]]+: python3')
-        bitbake ${BUILD_RECIPES}
+        UNBUILT_LOG=$(echo "${COMMIT_LOG}" | grep -v -E "[[:alnum:]]+ python3" || echo "None")
+        echo $BUILD_RECIPES | xargs bitbake
         echo "The following patches were not addressed: "
         echo "${UNBUILT_LOG}"
       volumeMounts:

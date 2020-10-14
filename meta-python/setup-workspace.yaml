@@ -8,11 +8,11 @@ spec:
   steps:
     - name: clear-old-workspace
       image: registry.hub.docker.com/threexc/yocto-builder
-      workingDir: /workspace/poky
+      workingDir: /workspace
       script: |
         #!/bin/bash -xe
-        if [ -d build/tmp ]; then
-            rm -rf build/tmp
+        if [ -d "poky/build/tmp" ]; then
+            rm -rf poky/build/tmp
         fi
       volumeMounts:
       - name: build
@@ -22,9 +22,16 @@ spec:
       workingDir: /workspace
       script: |
         #!/bin/bash -xe
-        if [ ! -d poky ]; then
+        if [ ! -d "poky" ]; then
             git clone git://git.yoctoproject.org/poky
+        fi
+
+        if [ ! -d "meta-openembedded" ]; then
             git clone git://git.openembedded.org/meta-openembedded
+        fi
+        
+        if [ ! -d "logs/qemux86-64" ]; then
+            mkdir -p logs/qemux86-64
         fi
       volumeMounts:
       - name: build
@@ -42,11 +49,11 @@ spec:
         mountPath: /workspace
     - name: setup-conf
       image: registry.hub.docker.com/threexc/yocto-builder
-      workingDir: /workspace/poky
+      workingDir: /workspace
       script: |
         #!/bin/bash -xe
-        if [ ! -d build/conf/ ]; then
-          source oe-init-build-env build
+        if [ ! -d poky/build/conf/ ]; then
+          cd poky && source oe-init-build-env build
           echo "BBLAYERS ?= \" \\
                   /workspace/poky/meta \\
                   /workspace/poky/meta-poky \\
