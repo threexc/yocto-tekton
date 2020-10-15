@@ -60,6 +60,17 @@ configuration needed e.g. for podman would be greatly appreciated!
 3. Follow the instructions at [Computing for Geeks](https://computingforgeeks.com/how-to-install-docker-on-fedora) 
 for setting up Docker Community Edition on Fedora 32.
 
+### To-Do
+
+- Use configmaps and triggerbindings to remove hard-coding from all
+  pipelines
+- Better patch queue/identification for meta-python and poky pipelines
+- Start using stuff from the [Tekton
+  Catalog](https://github.com/tektoncd/catalog)
+- Get QEMU working in the testimage container
+  - Do it with KVM and tap/tun
+- Figure out Tanka/Helm for entire sstate deployment + pipelines
+
 ### Frequently Asked Questions
 
 1. **Why Use kubeadm and not Minikube (or another tool)?**
