@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: x86-64-sstate-pvc
+  name: yocto-sstate-pvc
   namespace: tekton-pipelines
 spec:
   storageClassName: manual

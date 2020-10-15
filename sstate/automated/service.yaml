@@ -3,17 +3,17 @@ kind: Service
 metadata:
   creationTimestamp: null
   labels:
-    app: httpd-sstate
-  name: httpd-sstate
+    app: yocto-sstate
+  name: yocto-sstate
   namespace: tekton-pipelines
 spec:
   ports:
-  - name: httpd-sstate-port
+  - name: yocto-sstate-port
     port: 80
     protocol: TCP
     targetPort: 80
   selector:
-    app: httpd-sstate
+    app: yocto-sstate
   type: NodePort
 status:
   loadBalancer: {}

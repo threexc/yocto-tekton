@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: httpd-sstate
+  name: yocto-sstate
   namespace: tekton-pipelines
   labels:
-    app: httpd-sstate
+    app: yocto-sstate
 spec:
   selector:
     matchLabels:
-      app: httpd-sstate
+      app: yocto-sstate
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: httpd-sstate
+        app: yocto-sstate
     spec:
       containers:
-      - name: x86-64-sstate-pvc
+      - name: yocto-sstate-pvc
         image: httpd
         ports:
         - containerPort: 80
@@ -25,8 +25,8 @@ spec:
         imagePullPolicy: Always
         volumeMounts:
           - mountPath: /usr/local/apache2/htdocs
-            name: x86-64-sstate-pvc
+            name: yocto-sstate-pvc
       volumes:
-        - name: x86-64-sstate-pvc
+        - name: yocto-sstate-pvc
           persistentVolumeClaim:
-           claimName: x86-64-sstate-pvc
+           claimName: yocto-sstate-pvc
