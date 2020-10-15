@@ -52,7 +52,3 @@ likely change in the future!
 - No QEMU in containers for meta-python-ptest-image (yet), and therefore
   the testimage-task.yaml steps have not been added to the meta-python
   pipeline
-- The line getting the recipe list in build-task.yaml breaks on some
-  punctuation in subject lines, e.g. "python3-<recipeA>/python3-<recipeB>"
-  if multiple recipes are altered. It should be expanded to handle more
-  advanced subject lines.
