@@ -71,9 +71,12 @@ RUN \
     rm -rf /var/cache/dnf && \
     rm -rf /usr/share/{man,doc,info,gnome/help} && \
     rm -rf /usr/share/texlive/texmf-dist/{fonts,doc,tex} && \
+    pip install kas pwclient && \
     cd /usr/libexec/git-core && \
     find . -samefile git -name 'git-*' -exec ln -sf git {} \; && \
     echo "builder ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
+COPY pwclientrc /home/builder/.pwclientrc
 
 USER builder
 

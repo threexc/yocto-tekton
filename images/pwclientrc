@@ -1,0 +1,13 @@
+
+# Sample .pwclientrc file for the oe project,
+# running on patchwork.openembedded.org.
+#
+# Just append this file to your existing ~/.pwclientrc
+# If you do not already have a ~/.pwclientrc, then copy this file to
+# ~/.pwclientrc, and uncomment the following two lines:
+[options]
+default=oe
+signoff=True
+
+[oe]
+url= https://patchwork.openembedded.org/xmlrpc/
