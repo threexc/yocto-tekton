@@ -15,13 +15,14 @@ Table of Contents
            32](#setting-up-docker-on-fedora-32)
       * [sstate](#sstate)
          * [Automatic Shared State](#automatic-shared-state)
+         * [Instructions](#instructions-1)
          * [Helm Chart](#helm-chart)
          * [Notes/Lessons Learned](#noteslessons-learned)
       * [Using the meta-python
         Pipeline](#using-the-meta-python-pipeline)
          * [The Pipeline in Action - Tekton
            Dashboard](#the-pipeline-in-action---tekton-dashboard)
-         * [Instructions](#instructions-1)
+         * [Instructions](#instructions-2)
          * [What Are These Things?!](#what-are-these-things)
          * [Limitations](#limitations)
       * [Using the poky Pipeline](#using-the-poky-pipeline)
@@ -111,14 +112,39 @@ for setting up Docker Community Edition on Fedora 32.
 
 ### Automatic Shared State
 
-The contents of the `automated` directory will configure a cronjob and
-eventlistener to rebuild the core-image-\* group of images in a
-directory
-once per day (similar to the contents of `meta-python`), which can then
-be used in the `SSTATE_MIRROR` variable in builds. The deployment.yaml,
-service.yaml, pv.yaml, and pvc.yaml are used to provision that build
-space and also to serve it as a browsable web interface in an httpd
-container.
+The contents of the [sstate/automated](sstate/automated) directory will configure a 
+cronjob and eventlistener to rebuild the core-image-\* group of images in a
+directory once per day (similar to the contents of `meta-python`), which can 
+then be used in the `SSTATE_MIRROR` variable in builds. The deployment.yaml,
+service.yaml, pv.yaml, and pvc.yaml are used to provision that build space 
+and also to serve it as a browsable web interface in an httpd container.
+
+### Instructions
+
+1. `kubectl apply -f` the following:
+   1. sstate-build-task.yaml
+   2. sstate-build-pipeline.yaml
+   3. pv.yaml
+   4. pvc.yaml
+2. `kubectl create -f`:
+   1. deployment.yaml
+3. `kubectl apply -f`:
+   1. service.yaml
+   2. pipeline.yaml
+   3. eventlistener.yaml
+   4. serviceaccount.yaml
+   5. triggertemplate.yaml
+   6. triggerbinding.yaml
+   7. cronjob.yaml
+
+Note 1: There are "run" versions of the pipelines and tasks, but they
+are not required to created with `kubectl create -f <filename>` unless
+you want to run a manual build; the cronjob and eventlistener files will
+setup an automatic build process.
+
+Note 2: You will need to modify the hard-coded paths in
+triggertemplate.yaml (and pipelinerun.yaml/taskrun.yaml) for things to
+work (or create the same paths on your build node(s)).
 
 ### Helm Chart
 
