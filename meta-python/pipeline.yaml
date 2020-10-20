@@ -17,6 +17,6 @@ spec:
     when:
       - input: "$(tasks.meta-python-build.results.built)"
         operator: in
-        values: ["yes"]
+        values: ["Yes"]
     taskRef:
       name: meta-python-log

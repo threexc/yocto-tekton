@@ -21,7 +21,7 @@ spec:
 
         if [ -z "${COMMIT_LOG}" ]; then
             echo "No difference between master and master-next branches. Exiting..."
-            echo "No" | tee $(results.built.path);
+            echo -n "No" | tee $(results.built.path);
             exit 0
         fi
         BUILD_RECIPES=$(echo "${COMMIT_LOG}" | awk '{print $2}' | tr -d : | grep "python")
@@ -29,7 +29,7 @@ spec:
         echo $BUILD_RECIPES | xargs bitbake
         echo "The following patches were not addressed: "
         echo "${UNBUILT_LOG}"
-        echo "Yes" | tee $(results.built.path);
+        echo -n "Yes" | tee $(results.built.path);
       volumeMounts:
       - name: build
         mountPath: /workspace
