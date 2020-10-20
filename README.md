@@ -1,5 +1,17 @@
 # yocto-tekton
 
+Table of Contents
+=================
+
+   * [yocto-tekton](#yocto-tekton)
+      * [Instructions for Setting Up Kubernetes and Tekton With kubeadm](#instructions-for-setting-up-kubernetes-and-tekton-with-kubeadm)
+         * [Prerequisites](#prerequisites)
+         * [Instructions](#instructions)
+         * [Setting up Docker on Fedora 32](#setting-up-docker-on-fedora-32)
+         * [Using the meta-python Pipeline](#using-the-meta-python-pipeline)
+         * [To-Do](#to-do)
+         * [Frequently Asked Questions](#frequently-asked-questions)
+
 This is a repository of configuration files meant for maintaining the
 layers of the [Yocto Project](https://www.yoctoproject.org/). It
 originated as a simple set of Tekton pipeline resources for Kubernetes
