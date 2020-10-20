@@ -4,13 +4,28 @@ Table of Contents
 =================
 
    * [yocto-tekton](#yocto-tekton)
-      * [Instructions for Setting Up Kubernetes and Tekton With kubeadm](#instructions-for-setting-up-kubernetes-and-tekton-with-kubeadm)
+      * [Overview](#overview)
+      * [Instructions for Setting Up Kubernetes and Tekton With
+        kubeadm](#instructions-for-setting-up-kubernetes-and-tekton-with-kubeadm)
          * [Prerequisites](#prerequisites)
          * [Instructions](#instructions)
-         * [Setting up Docker on Fedora 32](#setting-up-docker-on-fedora-32)
-         * [Using the meta-python Pipeline](#using-the-meta-python-pipeline)
-         * [To-Do](#to-do)
-         * [Frequently Asked Questions](#frequently-asked-questions)
+         * [Setting up Docker on Fedora
+           32](#setting-up-docker-on-fedora-32)
+      * [Dockerfiles](#dockerfiles)
+      * [Using the meta-python
+        Pipeline](#using-the-meta-python-pipeline)
+         * [What Are These Things?!](#what-are-these-things)
+         * [Limitations](#limitations)
+      * [Using the poky Pipeline](#using-the-poky-pipeline)
+      * [sstate](#sstate)
+         * [Automatic Shared State](#automatic-shared-state)
+         * [Helm Chart](#helm-chart)
+         * [Notes/Lessons Learned](#noteslessons-learned)
+      * [To-Do](#to-do)
+      * [Frequently Asked Questions](#frequently-asked-questions)
+
+
+## Overview
 
 This is a repository of configuration files meant for maintaining the
 layers of the [Yocto Project](https://www.yoctoproject.org/). It
@@ -72,9 +87,114 @@ configuration needed e.g. for podman would be greatly appreciated!
 3. Follow the instructions at [Computing for Geeks](https://computingforgeeks.com/how-to-install-docker-on-fedora) 
 for setting up Docker Community Edition on Fedora 32.
 
-### Using the meta-python Pipeline
+## Dockerfiles
 
-### To-Do
+The Dockerfiles here are used to handle the majority of the deployments
+and pipelines created through the rest of the repository's content.
+
+1. Dockerfile-buildspace is the catch-all container for actual builds,
+   which includes all of the tools necessary to successfully run bitbake
+   for various recipes;
+2. Dockerfile-nettools is a container that is best used as a debug pod
+   when testing new deployments, pods, etc. and their configurations
+   (e.g. if you want to make sure that an httpd deployment is exposed
+   where you think it is)
+
+## Using the meta-python Pipeline
+
+**Note:** The triggertemplate.yaml, log-task-run.yaml,
+build-task-run.yaml, setup-workspace-task-run.yaml, and
+pipeline-run.yaml files have hard-coded paths in them at the moment
+which are specific to the author's system. You'll need to change them
+(or create the same paths) for them to work!
+
+1. (Optional) Prepare the [sstate deployment](../sstate/README.md)
+2. `kubectl apply -f` the following:
+   1. setup-workspace.yaml
+   2. build-task.yaml
+   3. log-task.yaml
+   4. pipeline.yaml
+   5. eventlistener.yaml
+   6. serviceaccount.yaml
+   7. triggertemplate.yaml
+   8. triggerbinding.yaml
+   9. cronjob.yaml
+3. `kubectl create -f` the following for **manual** runs:
+   1. pipeline-run.yaml
+   2. (Only to run the individual tasks) "-run.yaml" files. This is
+      not required if running the whole pipeline as in step 3.i.
+
+### What Are These Things?!
+
+While the purpose/functionality of the setup and build YAML files may be
+fairly apparent from their content (and from other Tekton examples you
+may have read), where it gets tricky is the build triggering portion of
+the overall pipeline. More specifically, the combination of the
+following files serves the same purpose that you get from something like
+Jenkins' build pipeline with the "Build Periodically" option filled out:
+
+- eventlistener.yaml
+- serviceaccount.yaml
+- triggertemplate.yaml
+- triggerbinding.yaml (not actually used right now)
+- cronjob.yaml
+
+An EventListener, according to the
+[documentation](https://tekton.dev/docs/triggers/eventlisteners/),
+processes incoming HTTP events with JSON payloads and uses them to
+create Tekton resources via TriggerTemplates (and TriggerBindings, if
+you want to extract data from these events to pass to the resources).
+The cronjob for this pipeline uses `curl -X POST` to contact the
+EventListener without actually sending any data, since none is currently
+required to start the (mostly hard-coded) build pipeline. This will
+likely change in the future!
+
+### Limitations
+
+- No QEMU in containers for meta-python-ptest-image (yet), and therefore
+  the testimage-task.yaml steps have not been added to the meta-python
+  pipeline
+
+
+## Using the poky Pipeline
+
+This is a limited functionality poky pipeline - it will grab the names
+of recipes changed between origin/master and origin/master-next, and
+build those as long as the recipe filename (once the version number has
+been stripped) matches the actual recipe name.
+
+## sstate
+
+### Automatic Shared State
+
+The contents of the `automated` directory will configure a cronjob and
+eventlistener to rebuild the core-image-\* group of images in a
+directory
+once per day (similar to the contents of `meta-python`), which can then
+be used in the `SSTATE_MIRROR` variable in builds. The deployment.yaml,
+service.yaml, pv.yaml, and pvc.yaml are used to provision that build
+space and also to serve it as a browsable web interface in an httpd
+container.
+
+### Helm Chart
+
+An example of a Helm chart that can be used to deploy the httpd server
+portion is in the `helm-chart` directory. It can be installed with the
+following command:
+
+`helm install <deployment_name> --namespace tekton-pipelines
+helm-chart/`
+
+Where <deployment_name> can be whatever you'd like (meta-python expects
+it to be "yocto-sstate" by default).
+
+### Notes/Lessons Learned
+
+- Helm doesn't like "generateName" fields (making adding the Tekton
+  parts to the chart difficult):
+  https://github.com/helm/helm/issues/3348
+
+## To-Do
 
 - Use configmaps and triggerbindings to remove hard-coding from all
   pipelines
@@ -85,7 +205,7 @@ for setting up Docker Community Edition on Fedora 32.
   - Do it with KVM and tap/tun
 - Figure out Tanka/Helm for entire sstate deployment + pipelines
 
-### Frequently Asked Questions
+## Frequently Asked Questions
 
 1. **Why Use kubeadm and not Minikube (or another tool)?**
 
