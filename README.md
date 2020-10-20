@@ -15,6 +15,8 @@ Table of Contents
            32](#setting-up-docker-on-fedora-32)
       * [Using the meta-python
         Pipeline](#using-the-meta-python-pipeline)
+         * [The Pipeline in Action - Tekton
+           Dashboard](#the-pipeline-in-action---tekton-dashboard)
          * [Instructions](#instructions-1)
          * [What Are These Things?!](#what-are-these-things)
          * [Limitations](#limitations)
@@ -107,13 +109,17 @@ for setting up Docker Community Edition on Fedora 32.
 
 ## Using the meta-python Pipeline
 
+### The Pipeline in Action - Tekton Dashboard
+
+![meta-python pipeline](https://github.com/threexc/yocto-tekton/blob/main/media/meta-python-1.gif)
+
+### Instructions
+
 **Note:** The triggertemplate.yaml, log-task-run.yaml,
 build-task-run.yaml, setup-workspace-task-run.yaml, and
 pipeline-run.yaml files have hard-coded paths in them at the moment
 which are specific to the author's system. You'll need to change them
 (or create the same paths) for them to work!
-
-### Instructions
 
 1. (Optional) Prepare the [sstate deployment](../sstate/README.md)
 2. `kubectl apply -f` the following:
