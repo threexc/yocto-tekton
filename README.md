@@ -60,6 +60,8 @@ configuration needed e.g. for podman would be greatly appreciated!
 3. Follow the instructions at [Computing for Geeks](https://computingforgeeks.com/how-to-install-docker-on-fedora) 
 for setting up Docker Community Edition on Fedora 32.
 
+### Using the meta-python Pipeline
+
 ### To-Do
 
 - Use configmaps and triggerbindings to remove hard-coding from all
