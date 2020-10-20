@@ -13,7 +13,7 @@ Table of Contents
          * [Instructions](#instructions)
          * [Setting up Docker on Fedora
            32](#setting-up-docker-on-fedora-32)
-      * [sstate](#sstate)
+      * [The Shared State Deployment](#the-shared-state-deployment)
          * [Automatic Shared State](#automatic-shared-state)
          * [Instructions](#instructions-1)
          * [Helm Chart](#helm-chart)
@@ -108,7 +108,7 @@ configuration needed e.g. for podman would be greatly appreciated!
 3. Follow the instructions at [Computing for Geeks](https://computingforgeeks.com/how-to-install-docker-on-fedora) 
 for setting up Docker Community Edition on Fedora 32.
 
-## sstate
+## The Shared State Deployment
 
 ### Automatic Shared State
 
@@ -122,27 +122,29 @@ and also to serve it as a browsable web interface in an httpd container.
 ### Instructions
 
 1. `kubectl apply -f` the following:
-   1. sstate-build-task.yaml
-   2. sstate-build-pipeline.yaml
-   3. pv.yaml
-   4. pvc.yaml
-2. `kubectl create -f`:
-   1. deployment.yaml
-3. `kubectl apply -f`:
-   1. service.yaml
-   2. pipeline.yaml
+   1. pv.yaml
+   2. pvc.yaml
+   3. deployment.yaml
+   4. service.yaml
+   5. sstate-build-task.yaml
+   6. sstate-build-pipeline.yaml
    3. eventlistener.yaml
    4. serviceaccount.yaml
    5. triggertemplate.yaml
    6. triggerbinding.yaml
    7. cronjob.yaml
 
-Note 1: There are "run" versions of the pipelines and tasks, but they
+Note 1: You may see warnings about the usage of `kubectl apply` vs
+`kubectl create`. These are OK - the proper way to use some resources
+(deployments, *Run types, etc.) is with the latter command, but they
+should still work with the former.
+
+Note 2: There are "run" versions of the pipelines and tasks, but they
 are not required to created with `kubectl create -f <filename>` unless
 you want to run a manual build; the cronjob and eventlistener files will
 setup an automatic build process.
 
-Note 2: You will need to modify the hard-coded paths in
+Note 3: You will need to modify the hard-coded paths in
 triggertemplate.yaml (and pipelinerun.yaml/taskrun.yaml) for things to
 work (or create the same paths on your build node(s)).
 
@@ -157,6 +159,10 @@ helm-chart/`
 
 Where <deployment_name> can be whatever you'd like (meta-python expects
 it to be "yocto-sstate" by default).
+
+Note that this process is mainly for demonstrative purposes right now -
+Helm appears to be too limited for supporting the Tekton CRDs like
+pipelines at the moment.
 
 ### Notes/Lessons Learned
 
