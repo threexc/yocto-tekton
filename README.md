@@ -28,9 +28,7 @@ Table of Contents
       * [Using the poky Pipeline](#using-the-poky-pipeline)
       * [Frequently Asked Questions](#frequently-asked-questions)
       * [To-Do](#to-do)
-
-TOC generated with the help of
-[gh-md-toc](https://github.com/ekalinin/github-markdown-toc)
+      * [Credits](#credits)
 
 ## Overview
 
@@ -292,3 +290,9 @@ username on Freenode IRC, or at `trevor.gamblin@windriver.com`.
   - Do it with KVM and tap/tun
 - Figure out Tanka/Helm for entire sstate deployment + pipelines
 
+## Credits
+
+TOC generated with the help of
+[gh-md-toc](https://github.com/ekalinin/github-markdown-toc)
+
+GIFs generated with [peek](https://github.com/phw/peek)
