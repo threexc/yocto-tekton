@@ -5,6 +5,9 @@ metadata:
   name: meta-python-build
   namespace: tekton-pipelines
 spec:
+  results:
+    - name: built
+      description: Yes/No status of whether a build was done
   steps:
     - name: run-build
       image: registry.hub.docker.com/threexc/yocto-builder
@@ -15,11 +18,18 @@ spec:
         export LANG=en_US.UTF-8
         # get the latest python recipes and bitbake them
         COMMIT_LOG=$(cd ../../meta-openembedded/ && git log --pretty=oneline --grep="python" origin/master..origin/master-next)
+
+        if [ -z "${COMMIT_LOG}" ]; then
+            echo "No difference between master and master-next branches. Exiting..."
+            echo "No" | tee $(results.built.path);
+            exit 0
+        fi
         BUILD_RECIPES=$(echo "${COMMIT_LOG}" | awk '{print $2}' | tr -d : | grep "python")
         UNBUILT_LOG=$(echo "${COMMIT_LOG}" | grep -v -E "[[:alnum:]]+ python3" || echo "None")
         echo $BUILD_RECIPES | xargs bitbake
         echo "The following patches were not addressed: "
         echo "${UNBUILT_LOG}"
+        echo "Yes" | tee $(results.built.path);
       volumeMounts:
       - name: build
         mountPath: /workspace
