@@ -13,6 +13,10 @@ Table of Contents
          * [Instructions](#instructions)
          * [Setting up Docker on Fedora
            32](#setting-up-docker-on-fedora-32)
+      * [sstate](#sstate)
+         * [Automatic Shared State](#automatic-shared-state)
+         * [Helm Chart](#helm-chart)
+         * [Notes/Lessons Learned](#noteslessons-learned)
       * [Using the meta-python
         Pipeline](#using-the-meta-python-pipeline)
          * [The Pipeline in Action - Tekton
@@ -21,10 +25,6 @@ Table of Contents
          * [What Are These Things?!](#what-are-these-things)
          * [Limitations](#limitations)
       * [Using the poky Pipeline](#using-the-poky-pipeline)
-      * [sstate](#sstate)
-         * [Automatic Shared State](#automatic-shared-state)
-         * [Helm Chart](#helm-chart)
-         * [Notes/Lessons Learned](#noteslessons-learned)
       * [Frequently Asked Questions](#frequently-asked-questions)
       * [To-Do](#to-do)
 
@@ -107,6 +107,37 @@ configuration needed e.g. for podman would be greatly appreciated!
 3. Follow the instructions at [Computing for Geeks](https://computingforgeeks.com/how-to-install-docker-on-fedora) 
 for setting up Docker Community Edition on Fedora 32.
 
+## sstate
+
+### Automatic Shared State
+
+The contents of the `automated` directory will configure a cronjob and
+eventlistener to rebuild the core-image-\* group of images in a
+directory
+once per day (similar to the contents of `meta-python`), which can then
+be used in the `SSTATE_MIRROR` variable in builds. The deployment.yaml,
+service.yaml, pv.yaml, and pvc.yaml are used to provision that build
+space and also to serve it as a browsable web interface in an httpd
+container.
+
+### Helm Chart
+
+An example of a Helm chart that can be used to deploy the httpd server
+portion is in the `helm-chart` directory. It can be installed with the
+following command:
+
+`helm install <deployment_name> --namespace tekton-pipelines
+helm-chart/`
+
+Where <deployment_name> can be whatever you'd like (meta-python expects
+it to be "yocto-sstate" by default).
+
+### Notes/Lessons Learned
+
+- Helm doesn't like "generateName" fields (making adding the Tekton
+  parts to the chart difficult):
+  https://github.com/helm/helm/issues/3348
+
 ## Using the meta-python Pipeline
 
 ### The Pipeline in Action - Tekton Dashboard
@@ -121,8 +152,10 @@ pipeline-run.yaml files have hard-coded paths in them at the moment
 which are specific to the author's system. You'll need to change them
 (or create the same paths) for them to work!
 
-1. (Optional) Prepare the [sstate deployment](../sstate/README.md)
-2. `kubectl apply -f` the following:
+Note. These instructions assume that you've already done the setup for
+the [sstate deployment](#sstate)
+
+1. `kubectl apply -f` the following:
    1. setup-workspace.yaml
    2. build-task.yaml
    3. log-task.yaml
@@ -132,7 +165,7 @@ which are specific to the author's system. You'll need to change them
    7. triggertemplate.yaml
    8. triggerbinding.yaml
    9. cronjob.yaml
-3. `kubectl create -f` the following for **manual** runs:
+2. `kubectl create -f` the following for **manual** runs:
    1. pipeline-run.yaml
    2. (Only to run the individual tasks) "-run.yaml" files. This is
       not required if running the whole pipeline as in step 3.i.
@@ -168,7 +201,6 @@ likely change in the future!
   the testimage-task.yaml steps have not been added to the meta-python
   pipeline
 
-
 ## Using the poky Pipeline
 
 This is a limited functionality poky pipeline - it will grab the names
@@ -176,36 +208,6 @@ of recipes changed between origin/master and origin/master-next, and
 build those as long as the recipe filename (once the version number has
 been stripped) matches the actual recipe name.
 
-## sstate
-
-### Automatic Shared State
-
-The contents of the `automated` directory will configure a cronjob and
-eventlistener to rebuild the core-image-\* group of images in a
-directory
-once per day (similar to the contents of `meta-python`), which can then
-be used in the `SSTATE_MIRROR` variable in builds. The deployment.yaml,
-service.yaml, pv.yaml, and pvc.yaml are used to provision that build
-space and also to serve it as a browsable web interface in an httpd
-container.
-
-### Helm Chart
-
-An example of a Helm chart that can be used to deploy the httpd server
-portion is in the `helm-chart` directory. It can be installed with the
-following command:
-
-`helm install <deployment_name> --namespace tekton-pipelines
-helm-chart/`
-
-Where <deployment_name> can be whatever you'd like (meta-python expects
-it to be "yocto-sstate" by default).
-
-### Notes/Lessons Learned
-
-- Helm doesn't like "generateName" fields (making adding the Tekton
-  parts to the chart difficult):
-  https://github.com/helm/helm/issues/3348
 
 ## Frequently Asked Questions
 
