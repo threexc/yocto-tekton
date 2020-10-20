@@ -6,13 +6,13 @@ Table of Contents
    * [yocto-tekton](#yocto-tekton)
    * [Table of Contents](#table-of-contents)
       * [Overview](#overview)
+      * [Dockerfiles](#dockerfiles)
       * [Instructions for Setting Up Kubernetes and Tekton With
         kubeadm](#instructions-for-setting-up-kubernetes-and-tekton-with-kubeadm)
          * [Prerequisites](#prerequisites)
          * [Instructions](#instructions)
          * [Setting up Docker on Fedora
            32](#setting-up-docker-on-fedora-32)
-      * [Dockerfiles](#dockerfiles)
       * [Using the meta-python
         Pipeline](#using-the-meta-python-pipeline)
          * [Instructions](#instructions-1)
@@ -23,8 +23,11 @@ Table of Contents
          * [Automatic Shared State](#automatic-shared-state)
          * [Helm Chart](#helm-chart)
          * [Notes/Lessons Learned](#noteslessons-learned)
-      * [To-Do](#to-do)
       * [Frequently Asked Questions](#frequently-asked-questions)
+      * [To-Do](#to-do)
+
+TOC generated with the help of
+[gh-md-toc](https://github.com/ekalinin/github-markdown-toc)
 
 ## Overview
 
@@ -42,6 +45,20 @@ cluster below to get started, or view each directory's
 README.md to learn more about what they do.
 
 Maintainer: Trevor Gamblin <trevor.gamblin@windriver.com>
+
+## Dockerfiles
+
+The [Dockerfiles](Dockerfiles) are used to handle the majority of the 
+deployments and pipelines created through the rest of the repository's 
+content.
+
+1. Dockerfile-buildspace is the catch-all container for actual builds,
+   which includes all of the tools necessary to successfully run bitbake
+   for various recipes;
+2. Dockerfile-nettools is a container that is best used as a debug pod
+   when testing new deployments, pods, etc. and their configurations
+   (e.g. if you want to make sure that an httpd deployment is exposed
+   where you think it is)
 
 ## Instructions for Setting Up Kubernetes and Tekton With kubeadm
 
@@ -87,19 +104,6 @@ configuration needed e.g. for podman would be greatly appreciated!
 2. Reboot the system
 3. Follow the instructions at [Computing for Geeks](https://computingforgeeks.com/how-to-install-docker-on-fedora) 
 for setting up Docker Community Edition on Fedora 32.
-
-## Dockerfiles
-
-The Dockerfiles here are used to handle the majority of the deployments
-and pipelines created through the rest of the repository's content.
-
-1. Dockerfile-buildspace is the catch-all container for actual builds,
-   which includes all of the tools necessary to successfully run bitbake
-   for various recipes;
-2. Dockerfile-nettools is a container that is best used as a debug pod
-   when testing new deployments, pods, etc. and their configurations
-   (e.g. if you want to make sure that an httpd deployment is exposed
-   where you think it is)
 
 ## Using the meta-python Pipeline
 
@@ -197,17 +201,6 @@ it to be "yocto-sstate" by default).
   parts to the chart difficult):
   https://github.com/helm/helm/issues/3348
 
-## To-Do
-
-- Use configmaps and triggerbindings to remove hard-coding from all
-  pipelines
-- Better patch queue/identification for meta-python and poky pipelines
-- Start using stuff from the [Tekton
-  Catalog](https://github.com/tektoncd/catalog)
-- Get QEMU working in the testimage container
-  - Do it with KVM and tap/tun
-- Figure out Tanka/Helm for entire sstate deployment + pipelines
-
 ## Frequently Asked Questions
 
 1. **Why Use kubeadm and not Minikube (or another tool)?**
@@ -247,3 +240,15 @@ or more of the following (as examples):
 Submitting pull requests, and/or discussing via opening issues are the
 best avenues right now. You can also reach Trevor via the `tgamblin`
 username on Freenode IRC, or at `trevor.gamblin@windriver.com`.
+
+## To-Do
+
+- Use configmaps and triggerbindings to remove hard-coding from all
+  pipelines
+- Better patch queue/identification for meta-python and poky pipelines
+- Start using stuff from the [Tekton
+  Catalog](https://github.com/tektoncd/catalog)
+- Get QEMU working in the testimage container
+  - Do it with KVM and tap/tun
+- Figure out Tanka/Helm for entire sstate deployment + pipelines
+
