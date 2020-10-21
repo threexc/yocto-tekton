@@ -21,6 +21,8 @@ Table of Contents
       * [Using the meta-python
         Pipeline](#using-the-meta-python-pipeline)
          * [The Pipeline in Action - Tekton
+           CLI](#the-pipeline-in-action---tekton-cli)
+         * [The Pipeline in Action - Tekton
            Dashboard](#the-pipeline-in-action---tekton-dashboard)
          * [Instructions](#instructions-2)
          * [What Are These Things?!](#what-are-these-things)
@@ -88,6 +90,13 @@ so that the network pods run
 12. Install [Helm](https://helm.sh/docs/intro/install/)
 13. (Recommended) Get the [Tekton CLI](https://tekton.dev/docs/cli/)
 14. (Recommended) Install [k9s](https://github.com/derailed/k9s)
+15. To make the Tekton Dashboard accessible from remote machines, run
+    `kubectl edit svc tekton-dashboard -n tekton-pipelines`, find the
+`spec.type` field, and change it from `clusterIP` to `NodePort`, then
+save and exit. Running `kubectl get svc -A` will then show you a list of
+services running in the cluster, including the tekton-dashboard, which
+will have a port number assigned to it. This can be accessed from your
+browser by visiting `<NodeIP>:<NodePort>`.
 
 ### Setting up Docker on Fedora 32
 
@@ -169,9 +178,34 @@ pipelines at the moment (see below).
 
 ### The Pipeline in Action - Tekton CLI
 
+The following GIF shows the meta-python EventListener being triggered
+from a pod created using the Dockerfile-nettools container. The nettools
+container is mainly meant to help test k8s network configuration, but
+since it can reach the EL, we can use it to manually trigger a new 
+meta-python pipeline run by sending an empty POST (instead of waiting
+for the meta-python cronjob to do it):
+
+`curl -X POST http://el-sstate-build.tekton-pipelines.svc.cluster.local:8080`
+
+The nettools pod is created by running:
+
+`kubectl run -i --tty --attach nettools --image=threexc/nettools`
+
+If it is instantiated but you are not currently attached, you can attach
+to it by running:
+
+`kubectl exec -it nettools -- /bin/bash`
+
+Finally, `tkn pipelinerun logs --last -f -n tekton-pipelines` allows us
+to follow the logs of the last pipelinerun in the tekton-pipelines
+namespace.
+
 ![meta-python pipeline](https://github.com/threexc/yocto-tekton/blob/main/media/meta-python-1.gif)
 
 ### The Pipeline in Action - Tekton Dashboard
+
+This view is the same idea as the CLI example above, except we're
+browsing the running meta-python pipeline via the Tekton Dashboard.
 
 ![meta-python pipeline](https://github.com/threexc/yocto-tekton/blob/main/media/meta-python-dashboard.gif)
 
@@ -206,7 +240,7 @@ the [sstate deployment](#sstate)
 While the purpose/functionality of the setup and build YAML files may be
 fairly apparent from their content (and from other Tekton examples you
 may have read), where it gets tricky is the build triggering portion of
-the overall pipeline. More specifically, the combination of the
+ghe overall pipeline. More specifically, the combination of the
 following files serves the same purpose that you get from something like
 Jenkins' build pipeline with the "Build Periodically" option filled out:
 
