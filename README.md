@@ -41,11 +41,8 @@ but it continues to evolve to support other layers and related
 processes, in addition to serving as a set of examples for building
 pipelines with Docker, k8s, and Tekton.
 
-See the instructions for configuring a k8s
-cluster below to get started, or view each directory's
-README.md to learn more about what they do.
-
-Maintainer: Trevor Gamblin <trevor.gamblin@windriver.com>
+See the instructions for configuring a k8s cluster in the coming sections 
+to get started.
 
 ## Dockerfiles
 
@@ -90,7 +87,7 @@ so that the network pods run
 11. Install Tekton Dashboard: `kubectl apply --filename https://github.com/tektoncd/dashboard/releases/latest/download/tekton-dashboard-release.yaml`
 12. Install [Helm](https://helm.sh/docs/intro/install/)
 13. (Recommended) Get the [Tekton CLI](https://tekton.dev/docs/cli/)
-14. (Recommended) Install k9s: `go get -u github.com/derailed/k9s`
+14. (Recommended) Install [k9s](https://github.com/derailed/k9s)
 
 ### Setting up Docker on Fedora 32
 
@@ -119,30 +116,30 @@ and also to serve it as a browsable web interface in an httpd container.
 
 ### Instructions
 
-1. `kubectl apply -f` the following:
-   1. pv.yaml
-   2. pvc.yaml
-   3. deployment.yaml
-   4. service.yaml
-   5. sstate-build-task.yaml
-   6. sstate-build-pipeline.yaml
-   3. eventlistener.yaml
-   4. serviceaccount.yaml
-   5. triggertemplate.yaml
-   6. triggerbinding.yaml
-   7. cronjob.yaml
+`kubectl apply -f` the following:
+1. pv.yaml
+2. pvc.yaml
+3. deployment.yaml
+4. service.yaml
+5. sstate-build-task.yaml
+6. sstate-build-pipeline.yaml
+7. eventlistener.yaml
+8. serviceaccount.yaml
+9. triggertemplate.yaml
+10. triggerbinding.yaml
+11. cronjob.yaml
 
-Note 1: You may see warnings about the usage of `kubectl apply` vs
+**Note 1:** You may see warnings about the usage of `kubectl apply` vs
 `kubectl create`. These are OK - the proper way to use some resources
 (deployments, *Run types, etc.) is with the latter command, but they
 should still work with the former.
 
-Note 2: There are "run" versions of the pipelines and tasks, but they
+**Note 2:** There are "run" versions of the pipelines and tasks, but they
 are not required to created with `kubectl create -f <filename>` unless
 you want to run a manual build; the cronjob and eventlistener files will
 setup an automatic build process.
 
-Note 3: You will need to modify the hard-coded paths in
+**Note 3:** You will need to modify the hard-coded paths in
 triggertemplate.yaml (and pipelinerun.yaml/taskrun.yaml) for things to
 work (or create the same paths on your build node(s)).
 
@@ -158,9 +155,9 @@ helm-chart/`
 Where <deployment_name> can be whatever you'd like (meta-python expects
 it to be "yocto-sstate" by default).
 
-Note that this process is mainly for demonstrative purposes right now -
+**Note:** This process is mainly for demonstrative purposes right now -
 Helm appears to be too limited for supporting the Tekton CRDs like
-pipelines at the moment.
+pipelines at the moment (see below).
 
 ### Notes/Lessons Learned
 
@@ -170,19 +167,23 @@ pipelines at the moment.
 
 ## Using the meta-python Pipeline
 
-### The Pipeline in Action - Tekton Dashboard
+### The Pipeline in Action - Tekton CLI
 
 ![meta-python pipeline](https://github.com/threexc/yocto-tekton/blob/main/media/meta-python-1.gif)
 
+### The Pipeline in Action - Tekton Dashboard
+
+![meta-python pipeline](https://github.com/threexc/yocto-tekton/blob/main/media/meta-python-dashboard.gif)
+
 ### Instructions
 
-**Note:** The triggertemplate.yaml, log-task-run.yaml,
+**Note 1:** The triggertemplate.yaml, log-task-run.yaml,
 build-task-run.yaml, setup-workspace-task-run.yaml, and
 pipeline-run.yaml files have hard-coded paths in them at the moment
 which are specific to the author's system. You'll need to change them
 (or create the same paths) for them to work!
 
-Note. These instructions assume that you've already done the setup for
+**Note 2:** These instructions assume that you've already done the setup for
 the [sstate deployment](#sstate)
 
 1. `kubectl apply -f` the following:
@@ -237,7 +238,6 @@ This is a limited functionality poky pipeline - it will grab the names
 of recipes changed between origin/master and origin/master-next, and
 build those as long as the recipe filename (once the version number has
 been stripped) matches the actual recipe name.
-
 
 ## Frequently Asked Questions
 
