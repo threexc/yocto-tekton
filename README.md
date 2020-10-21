@@ -185,7 +185,7 @@ since it can reach the EL, we can use it to manually trigger a new
 meta-python pipeline run by sending an empty POST (instead of waiting
 for the meta-python cronjob to do it):
 
-`curl -X POST http://el-sstate-build.tekton-pipelines.svc.cluster.local:8080`
+`curl -X POST http://el-meta-python-listener.tekton-pipelines.svc.cluster.local:8080`
 
 The nettools pod is created by running:
 
