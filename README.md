@@ -85,7 +85,7 @@ content.
 so that the network pods run
 8. (If the master node will also run builds) Taint the node: ```kubectl taint nodes --all node-role.kubernetes.io/master-```
 9. Install Tekton Pipelines: `kubectl apply --filename https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml`
-10. Install Tekton Triggers: `kubectl apply --filename https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml`
+10. Install Tekton Triggers: `kubectl apply --filename https://storage.googleapis.com/tekton-releases/triggers/latest/release.yaml`
 11. Install Tekton Dashboard: `kubectl apply --filename https://github.com/tektoncd/dashboard/releases/latest/download/tekton-dashboard-release.yaml`
 12. Install [Helm](https://helm.sh/docs/intro/install/)
 13. (Recommended) Get the [Tekton CLI](https://tekton.dev/docs/cli/)
