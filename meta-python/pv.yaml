@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: meta-python-pv
+  namespace: tekton-pipelines
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 300Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/tekton/data"

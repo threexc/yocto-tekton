@@ -15,9 +15,6 @@ spec:
       timeout: "3h"
       podTemplate:
         volumes:
-        - name: build
-          hostPath:
-            path: /tekton/data
-        - name: log
-          hostPath:
-            path: /tekton/data/logs
+        - name: meta-python-pvc
+          persistentVolumeClaim:
+            claimName: meta-python-pvc

@@ -31,6 +31,6 @@ spec:
         echo "${UNBUILT_LOG}"
         echo -n "Yes" | tee $(results.built.path);
       volumeMounts:
-      - name: build
+      - name: meta-python-pvc
         mountPath: /workspace
 
