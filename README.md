@@ -4,33 +4,28 @@ Table of Contents
 =================
 
    * [yocto-tekton](#yocto-tekton)
-   * [Table of Contents](#table-of-contents)
       * [Overview](#overview)
       * [Dockerfiles](#dockerfiles)
-      * [Instructions for Setting Up Kubernetes and Tekton With
-        kubeadm](#instructions-for-setting-up-kubernetes-and-tekton-with-kubeadm)
+      * [Instructions for Setting Up Kubernetes and Tekton With kubeadm](#instructions-for-setting-up-kubernetes-and-tekton-with-kubeadm)
          * [Prerequisites](#prerequisites)
          * [Instructions](#instructions)
-         * [Setting up Docker on Fedora
-           32](#setting-up-docker-on-fedora-32)
+         * [Setting up Docker on Fedora 32](#setting-up-docker-on-fedora-32)
+      * [Using the meta-python Pipeline](#using-the-meta-python-pipeline)
+         * [Instructions](#instructions-1)
+         * [The Pipeline in Action - Tekton CLI](#the-pipeline-in-action---tekton-cli)
+         * [The Pipeline in Action - Tekton Dashboard](#the-pipeline-in-action---tekton-dashboard)
       * [The Shared State Deployment](#the-shared-state-deployment)
          * [Automatic Shared State](#automatic-shared-state)
-         * [Instructions](#instructions-1)
+         * [Instructions](#instructions-2)
          * [Helm Chart](#helm-chart)
          * [Notes/Lessons Learned](#noteslessons-learned)
-      * [Using the meta-python
-        Pipeline](#using-the-meta-python-pipeline)
-         * [The Pipeline in Action - Tekton
-           CLI](#the-pipeline-in-action---tekton-cli)
-         * [The Pipeline in Action - Tekton
-           Dashboard](#the-pipeline-in-action---tekton-dashboard)
-         * [Instructions](#instructions-2)
          * [What Are These Things?!](#what-are-these-things)
          * [Limitations](#limitations)
       * [Using the poky Pipeline](#using-the-poky-pipeline)
       * [Frequently Asked Questions](#frequently-asked-questions)
       * [To-Do](#to-do)
       * [Credits](#credits)
+
 
 ## Overview
 
@@ -112,6 +107,72 @@ configuration needed e.g. for podman would be greatly appreciated!
 3. Follow the instructions at [Computing for Geeks](https://computingforgeeks.com/how-to-install-docker-on-fedora) 
 for setting up Docker Community Edition on Fedora 32.
 
+## Using the meta-python Pipeline
+
+### Instructions
+
+1. Edit the "volumes.yaml" file and set the hostPath.path value with
+   your preferred location for builds (make sure permissions are set,
+   and change the volume sizes if necessary)
+
+`kubectl apply -f` the following:
+2. volumes.yaml
+3. tasks.yaml
+4. pipeline.yaml
+5. serviceaccount.yaml
+7. triggers.yaml
+8. (Optional) Do a test run with `kubectl create -f pipeline-run.yaml`
+
+The meta-python pipeline will now trigger twice per day and build in the
+specified directory.
+
+**Note 1:** The triggertemplate.yaml, log-task-run.yaml,
+build-task-run.yaml, setup-workspace-task-run.yaml, and
+pipeline-run.yaml files have hard-coded paths in them at the moment
+which are specific to the author's system. You'll need to change them
+(or create the same paths) for them to work!
+
+**Note 2:** These instructions assume that you've already done the setup for
+the [sstate deployment](#sstate)
+
+**Note 3:** There are "run" versions of the tasks in the taskruns/
+directory, but they are not required to created with `kubectl create -f <filename>` 
+unless you want to run a manual build; the cronjob and eventlistener files will
+setup an automatic build process.
+
+### The Pipeline in Action - Tekton CLI
+
+The following GIF shows the meta-python EventListener being triggered
+from a pod created using the Dockerfile-nettools container. The nettools
+container is mainly meant to help test k8s network configuration, but
+since it can reach the EL, we can use it to manually trigger a new 
+meta-python pipeline run by sending an empty POST (instead of waiting
+for the meta-python cronjob to do it):
+
+`curl -X POST http://el-meta-python-listener.tekton-pipelines.svc.cluster.local:8080`
+
+The nettools pod is created by running:
+
+`kubectl run -i --tty --attach nettools --image=threexc/nettools`
+
+If it is instantiated but you are not currently attached, you can attach
+to it by running:
+
+`kubectl exec -it nettools -- /bin/bash`
+
+Finally, `tkn pipelinerun logs --last -f -n tekton-pipelines` allows us
+to follow the logs of the last pipelinerun in the tekton-pipelines
+namespace.
+
+![meta-python pipeline](https://github.com/threexc/yocto-tekton/blob/main/media/extended_demo.gif)
+
+### The Pipeline in Action - Tekton Dashboard
+
+This view is the same idea as the CLI example above, except we're
+browsing the running meta-python pipeline via the Tekton Dashboard.
+
+![meta-python pipeline](https://github.com/threexc/yocto-tekton/blob/main/media/meta-python-dashboard.gif)
+
 ## The Shared State Deployment
 
 ### Automatic Shared State
@@ -173,71 +234,6 @@ pipelines at the moment (see below).
 - Helm doesn't like "generateName" fields (making adding the Tekton
   parts to the chart difficult):
   https://github.com/helm/helm/issues/3348
-
-## Using the meta-python Pipeline
-
-### The Pipeline in Action - Tekton CLI
-
-The following GIF shows the meta-python EventListener being triggered
-from a pod created using the Dockerfile-nettools container. The nettools
-container is mainly meant to help test k8s network configuration, but
-since it can reach the EL, we can use it to manually trigger a new 
-meta-python pipeline run by sending an empty POST (instead of waiting
-for the meta-python cronjob to do it):
-
-`curl -X POST http://el-meta-python-listener.tekton-pipelines.svc.cluster.local:8080`
-
-The nettools pod is created by running:
-
-`kubectl run -i --tty --attach nettools --image=threexc/nettools`
-
-If it is instantiated but you are not currently attached, you can attach
-to it by running:
-
-`kubectl exec -it nettools -- /bin/bash`
-
-Finally, `tkn pipelinerun logs --last -f -n tekton-pipelines` allows us
-to follow the logs of the last pipelinerun in the tekton-pipelines
-namespace.
-
-![meta-python pipeline](https://github.com/threexc/yocto-tekton/blob/main/media/meta-python-1.gif)
-
-### The Pipeline in Action - Tekton Dashboard
-
-This view is the same idea as the CLI example above, except we're
-browsing the running meta-python pipeline via the Tekton Dashboard.
-
-![meta-python pipeline](https://github.com/threexc/yocto-tekton/blob/main/media/meta-python-dashboard.gif)
-
-### Instructions
-
-1. Edit the "volumes.yaml" file and set the hostPath.path value with
-   your preferred location for builds (make sure permissions are set,
-   and change the volume sizes if necessary)
-`kubectl apply -f` the following:
-2. volumes.yaml
-3. tasks.yaml
-4. pipeline.yaml
-5. serviceaccount.yaml
-7. triggers.yaml
-8. (Optional) Do a test run with `kubectl create -f pipeline-run.yaml`
-
-The meta-python pipeline will now trigger twice per day and build in the
-specified directory.
-
-**Note 1:** The triggertemplate.yaml, log-task-run.yaml,
-build-task-run.yaml, setup-workspace-task-run.yaml, and
-pipeline-run.yaml files have hard-coded paths in them at the moment
-which are specific to the author's system. You'll need to change them
-(or create the same paths) for them to work!
-
-**Note 2:** These instructions assume that you've already done the setup for
-the [sstate deployment](#sstate)
-
-**Note 3:** There are "run" versions of the tasks in the taskruns/
-directory, but they are not required to created with `kubectl create -f <filename>` 
-unless you want to run a manual build; the cronjob and eventlistener files will
-setup an automatic build process.
 
 ### What Are These Things?!
 
