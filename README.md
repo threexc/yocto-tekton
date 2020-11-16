@@ -115,13 +115,13 @@ for setting up Docker Community Edition on Fedora 32.
    your preferred location for builds (make sure permissions are set,
    and change the volume sizes if necessary)
 
-`kubectl apply -f` the following:
-2. volumes.yaml
-3. tasks.yaml
-4. pipeline.yaml
-5. serviceaccount.yaml
-7. triggers.yaml
-8. (Optional) Do a test run with `kubectl create -f pipeline-run.yaml`
+2. `kubectl apply -f` the following:
+    a. volumes.yaml
+    b. tasks.yaml
+    c. pipeline.yaml
+    d. serviceaccount.yaml
+    e. triggers.yaml
+    f. (Optional) Do a test run with `kubectl create -f pipeline-run.yaml`
 
 The meta-python pipeline will now trigger twice per day and build in the
 specified directory.
