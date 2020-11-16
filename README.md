@@ -125,32 +125,24 @@ and also to serve it as a browsable web interface in an httpd container.
 
 ### Instructions
 
+1. Edit the "volumes.yaml" file and set the hostPath.path value with
+   your preferred location for builds (make sure permissions are set,
+   and change the volume sizes if necessary)
 `kubectl apply -f` the following:
-1. pv.yaml
-2. pvc.yaml
-3. deployment.yaml
-4. service.yaml
-5. sstate-build-task.yaml
-6. sstate-build-pipeline.yaml
-7. eventlistener.yaml
-8. serviceaccount.yaml
-9. triggertemplate.yaml
-10. triggerbinding.yaml
-11. cronjob.yaml
+2. volumes.yaml
+3. tasks.yaml
+4. pipeline.yaml
+5. serviceaccount.yaml
+7. triggers.yaml
+8. (Optional) Do a test run with `kubectl create -f pipeline-run.yaml`
 
-**Note 1:** You may see warnings about the usage of `kubectl apply` vs
-`kubectl create`. These are OK - the proper way to use some resources
-(deployments, *Run types, etc.) is with the latter command, but they
-should still work with the former.
+The meta-python pipeline will now trigger twice per day and build in the
+specified directory.
 
-**Note 2:** There are "run" versions of the pipelines and tasks, but they
-are not required to created with `kubectl create -f <filename>` unless
-you want to run a manual build; the cronjob and eventlistener files will
+**Note:** There are "run" versions of the tasks in the taskruns/
+directory, but they are not required to created with `kubectl create -f <filename>` 
+unless you want to run a manual build; the cronjob and eventlistener files will
 setup an automatic build process.
-
-**Note 3:** You will need to modify the hard-coded paths in
-triggertemplate.yaml (and pipelinerun.yaml/taskrun.yaml) for things to
-work (or create the same paths on your build node(s)).
 
 ### Helm Chart
 

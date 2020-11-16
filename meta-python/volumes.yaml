@@ -1,3 +1,4 @@
+---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
@@ -13,3 +14,16 @@ spec:
     - ReadWriteOnce
   hostPath:
     path: "/tekton/data"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: meta-python-pvc
+  namespace: tekton-pipelines
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 300Gi
