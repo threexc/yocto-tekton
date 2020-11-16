@@ -13,20 +13,45 @@ spec:
       image: registry.hub.docker.com/threexc/yocto-builder
       workingDir: /workspace
       script: |
-        #!/bin/bash -xe
+        #!/bin/bash
         cd poky && source oe-init-build-env build
         export LANG=en_US.UTF-8
         # get the latest python recipes and bitbake them
-        COMMIT_LOG=$(cd ../../meta-openembedded/ && git log --pretty=oneline --grep="python" origin/master..origin/master-next)
+        # The filter character lines will always start with an upper-case letter. Commit hashes don't use them
+        # Ignore files that have been deleted (D flag to --diff-filter)
+        COMMIT_LOG="$(cd ../../meta-openembedded && git log --name-status --oneline --grep="python" origin/master..origin/master-next --find-renames --diff-filter=ACMR | grep "^[A-Z]" | grep python)"
+        RECIPE_NAME=""
+        RECIPE_LIST=""
 
         if [ -z "${COMMIT_LOG}" ]; then
             echo "No difference between master and master-next branches. Exiting..."
             echo -n "No" | tee $(results.built.path);
             exit 0
         fi
-        BUILD_RECIPES=$(echo "${COMMIT_LOG}" | awk '{print $2}' | tr -d : | grep "python")
+
+        while read -r line
+        do
+            LINE_LENGTH=$(echo "$line" | wc -w)
+            if [ "$LINE_LENGTH" = "3" ]; then
+                RECIPE_NAME=$(echo "$line" | awk '{print $3}' | awk -F/ '{print $NF}' | sed 's/_.*//' | sed 's/\..*//')
+            elif [ "$LINE_LENGTH" = "2" ]; then
+                RECIPE_NAME=$(echo "$line" | awk '{print $2}' | awk -F/ '{print $NF}' | sed 's/_.*//' | sed 's/\..*//')
+            else
+                echo "Something went wrong."
+            fi
+            PYTHON_CHECK=$(echo "$RECIPE_NAME" | grep python3)
+            if [ $? -eq 1 ]; then
+                PREFIX=$(echo "$RECIPE_NAME" | cut -d'-' -f1)
+                SUFFIX=$(echo "$RECIPE_NAME" | cut -d'-' -f2)
+                RECIPE_NAME="${PREFIX}3-${SUFFIX}"
+                echo "Recipe name is: $RECIPE_NAME"
+            fi
+            RECIPE_LIST+="${RECIPE_NAME} "
+
+        done < <(printf '%s\n' "$COMMIT_LOG")
+
         UNBUILT_LOG=$(echo "${COMMIT_LOG}" | grep -v -E "[[:alnum:]]+ python3" || echo "None")
-        echo $BUILD_RECIPES | xargs bitbake
+        echo $RECIPE_LIST | xargs bitbake
         echo "The following patches were not addressed: "
         echo "${UNBUILT_LOG}"
         echo -n "Yes" | tee $(results.built.path);
