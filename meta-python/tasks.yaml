@@ -53,17 +53,14 @@ spec:
                 PREFIX=$(echo "$RECIPE_NAME" | cut -d'-' -f1)
                 SUFFIX=$(echo "$RECIPE_NAME" | cut -d'-' -f2)
                 RECIPE_NAME="${PREFIX}3-${SUFFIX}"
-                echo "Recipe name is: $RECIPE_NAME"
             fi
             RECIPE_LIST+="${RECIPE_NAME} "
 
         done < <(printf '%s\n' "$COMMIT_LOG")
 
-        # If the earlier filter into $COMMIT_LOG caught things that aren't python recipes, list them for reference
-        UNBUILT_LOG=$(echo "${COMMIT_LOG}" | grep -v -E "[[:alnum:]]+ python3" || echo "None")
         echo $RECIPE_LIST | xargs bitbake
-        echo "The following patches were not addressed: "
-        echo "${UNBUILT_LOG}"
+        echo "The following list was sent to bitbake: "
+        echo "${RECIPE_LIST}"
         echo -n "Yes" | tee $(results.built.path);
       volumeMounts:
       - name: meta-python-pvc
