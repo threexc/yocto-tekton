@@ -74,8 +74,8 @@ case that information disappears), I have reproduced most of that
 content below. Note that the instructions here diverge from theirs at
 step 17, when we install Flannel (instead of Calico).
 
-1. Enable Kubernetes repos: `cat <<EOF >
-   /etc/yum.repos.d/kubernetes.repo
+1. Enable Kubernetes repos: 
+```cat <<EOF > /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
 name=Kubernetes
 baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-\$basearch
@@ -85,7 +85,7 @@ repo_gpgcheck=1
 gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg
 https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
 exclude=kubelet kubeadm kubectl
-EOF`
+EOF```
 2. Disable SELinux: `sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/'
    /etc/selinux/config`
 3. Enable cri-o nightly repo: `dnf -y module enable cri-o:nightly
@@ -100,15 +100,17 @@ dnf install -y cri-o
 6. Set the cgroup driver: `echo
    "KUBELET_EXTRA_ARGS=--cgroup-driver=systemd" | sudo tee
 /etc/sysconfig/kubelet`
-7. Enable required modules on boot: `tee /etc/modules-load.d/crio-net.conf <<EOF
+7. Enable required modules on boot: 
+```tee /etc/modules-load.d/crio-net.conf <<EOF
 overlay
 br_netfilter
-EOF`
-8. Set sysctl options: `tee /etc/sysctl.d/99-kubernetes-cri.conf <<EOF
+EOF```
+8. Set sysctl options: 
+```tee /etc/sysctl.d/99-kubernetes-cri.conf <<EOF
 net.bridge.bridge-nf-call-iptables  = 1
 net.ipv4.ip_forward                 = 1
 net.bridge.bridge-nf-call-ip6tables = 1
-EOF`
+EOF```
 9. Edit the `GRUB_CMDLINE_LINUX` line in /etc/default/grub and add:
     `systemd.unified_cgroup_hierarchy=0
 `
