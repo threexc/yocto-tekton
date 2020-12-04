@@ -13,10 +13,3 @@ spec:
      - meta-python-setup-workspace
     taskRef:
       name: meta-python-build
-  - name: meta-python-log
-    when:
-      - input: "$(tasks.meta-python-build.results.built)"
-        operator: in
-        values: ["Yes"]
-    taskRef:
-      name: meta-python-log

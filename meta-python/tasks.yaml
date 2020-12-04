@@ -148,24 +148,3 @@ spec:
       volumeMounts:
       - name: meta-python-pvc
         mountPath: /workspace
----
-apiVersion: tekton.dev/v1beta1
-kind: Task
-metadata:
-  name: meta-python-log
-  namespace: tekton-pipelines
-spec:
-  steps:
-    - name: copy-log
-      image: registry.hub.docker.com/threexc/yocto-builder
-      workingDir: /workspace/poky/build
-      script: |
-        #!/bin/bash -xe
-        LOG_ARCH=$(grep "^MACHINE" conf/local.conf | tail -1 | awk -F'=' '{print $2}' | sed -e 's/^ *//g' -e 's/^"//' -e 's/"$//')
-        mkdir -p /workspace/logs/$LOG_ARCH
-        RECIPES=$(cd ../../meta-openembedded/ && git log --pretty=oneline --grep="python" origin/master..origin/master-next | awk '{print $2}' | tr -d :)
-        echo "The following list was last sent to bitbake: ${RECIPES}" > logs/$LOG_ARCH/recipes_latest.log
-        cp tmp/log/cooker/${LOG_ARCH}/*.log /workspace/logs/$LOG_ARCH
-      volumeMounts:
-      - name: meta-python-pvc
-        mountPath: /workspace
