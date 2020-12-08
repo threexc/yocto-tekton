@@ -55,7 +55,7 @@ spec:
 
       # Clone the yocto-tekton repo so we can use the scripts
       if [ ! -d "yocto-tekton" ]; then
-          git clone --branch generic-layer-pipelines https://github.com/threexc/yocto-tekton.git
+          git clone --branch generic-layer-pipeline https://github.com/threexc/yocto-tekton.git
       fi
 
       # Clone poky if it's not present, otherwise checkout master and
