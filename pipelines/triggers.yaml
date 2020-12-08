@@ -1,0 +1,58 @@
+---
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: EventListener
+metadata:
+  name: meta-openembedded-listener
+  namespace: tekton-pipelines
+spec:
+  serviceAccountName: tekton-triggers-sa
+  serviceType: NodePort
+  triggers:
+    - name: meta-openembedded-build
+      bindings:
+      - ref: meta-openembedded-binding
+      template:
+        name: meta-openembedded-build-template
+---
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerTemplate
+metadata:
+  name: meta-openembedded-build-template
+  namespace: tekton-pipelines
+spec:
+  params:
+  - name: layer
+    description: The layer to run a build for
+    default: meta-python
+  - name: repo-dir
+    description: The location of the meta-openembedded repo
+    default: meta-openembedded
+  resourcetemplates:
+  - apiVersion: tekton.dev/v1beta1
+    kind: PipelineRun
+    metadata:
+      generateName: meta-openembedded-build-pipeline-run-
+    spec:
+      pipelineRef:
+        name: meta-openembedded-build-pipeline
+      timeout: "3h"
+      params:
+      - name: layer
+        value: $(tt.params.layer)
+      - name: repo-dir
+        value: $(tt.params.repo-dir)
+      podTemplate:
+        volumes:
+        - name: meta-openembedded-pvc
+          persistentVolumeClaim:
+            claimName: meta-openembedded-pvc
+---
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerBinding
+metadata:
+  name: meta-openembedded-binding
+  namespace: tekton-pipelines
+spec:
+  params:
+  - name: layer
+    value: $(body.layer)

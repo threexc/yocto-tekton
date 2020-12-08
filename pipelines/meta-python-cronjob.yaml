@@ -1,0 +1,24 @@
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: meta-python-cronjob
+  namespace: tekton-pipelines
+spec:
+  schedule: "0 */12 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: meta-python-nettools
+            image: threexc/nettools
+            args:
+            - /bin/bash
+            - -c
+            - curl -X POST \
+                   http://meta-openembedded-listener.tekton-pipelines.svc.cluster.local:8080 \
+                   -H 'Content-Type: application/json' \
+                   -d "{ \"layer\": \"meta-python\"
+                   }"
+          restartPolicy: OnFailure

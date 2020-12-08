@@ -1,0 +1,27 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: meta-openembedded-build-pipeline
+  namespace: tekton-pipelines
+spec:
+  params:
+  - name: layer
+    description: The meta-openembedded layer to build for
+    default: meta-python
+  - name: repo-dir
+    description: The location of the meta-openembedded repo
+    default: meta-openembedded
+  tasks:
+  - name: setup-workspace
+    taskRef:
+      name: meta-openembedded-setup-workspace
+  - name: run-build
+    runAfter:
+     - setup-workspace
+    taskRef:
+      name: meta-openembedded-run-build
+    params:
+      - name: layer
+        value: $(params.layer)
+      - name: repo-dir
+        value: $(params.repo-dir)
