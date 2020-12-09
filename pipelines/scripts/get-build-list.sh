@@ -51,7 +51,7 @@ if [ ! -z "${COMMIT_LOG}" ]; then
                 RECIPE_LIST+="${RECIPE_NAME} "
             fi
         else
-            RECIPE_LIST+="${RECIPE_NAME}"
+            RECIPE_LIST+="${RECIPE_NAME} "
         fi
 
     done < <(printf '%s\n' "$COMMIT_LOG")
