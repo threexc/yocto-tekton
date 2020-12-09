@@ -45,7 +45,7 @@ if [ ! -z "${COMMIT_LOG}" ]; then
 
         # Make sure what we've parsed is actually a python recipe.
         # If (and only if) it is, then add it to RECIPE_LIST
-        if [ "$LAYER == "meta-python" ]; then
+        if [ "$LAYER" == "meta-python" ]; then
             PYTHON_CHECK=$(echo "$RECIPE_NAME" | grep python3)
             if [ $? -eq 0 ]; then
                 RECIPE_LIST+="${RECIPE_NAME} "
