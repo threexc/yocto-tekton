@@ -15,7 +15,7 @@ done
 # Get the latest python recipe changes and bitbake them using --diff-filter for Added (A), Copied (C), 
 # Modified (M), or Renamed (R) files. The filter character lines will always start with an upper-case 
 # letter (commit hashes don't use them). Also ignore deleted files (D flag to --diff-filter)
-COMMIT_LOG=$(git -C "$REPO_DIR" log --name-status --oneline --grep="$LAYER" origin/master..origin/master-next --find-renames --diff-filter=ACMR | grep "^[A-Z]")
+COMMIT_LOG=$(git -C "$REPO_DIR" log --name-status --oneline origin/master..origin/master-next --find-renames --diff-filter=ACMR | grep "$LAYER" | grep "^[A-Z]")
 RECIPE_NAME=""
 RECIPE_LIST=""
 
