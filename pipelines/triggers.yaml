@@ -31,7 +31,7 @@ spec:
   - apiVersion: tekton.dev/v1beta1
     kind: PipelineRun
     metadata:
-      generateName: meta-openembedded-build-pipeline-run-
+      generateName: $(tt.params.layer)-build-pipeline-run-
     spec:
       pipelineRef:
         name: meta-openembedded-build-pipeline
