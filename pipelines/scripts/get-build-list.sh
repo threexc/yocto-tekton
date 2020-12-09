@@ -34,10 +34,10 @@ if [ ! -z "${COMMIT_LOG}" ]; then
             RECIPE_NAME=$(echo "$line" | awk '{print $2}' | awk -F/ '{print $NF}' | sed 's/_.*//' | sed 's/\..*//')
         fi
         
-        # Handle the case where a .inc file was modified, and the "recipe" it reports is e.g. python-grpcio-tools
-        # instead of python3-grpcio-tools. Do this by splitting the recipe string on the first hyphen and adding
-        # at the end of the prefix, before re-combining
-        if [ $? -eq 1 ]; then
+        # For meta-python, handle the case where a .inc file was modified, and the "recipe" it reports is e.g. 
+        # python-grpcio-tools instead of python3-grpcio-tools. Do this by splitting the recipe string on the 
+        # first hyphen and adding at the end of the prefix, before re-combining
+        if [ "$LAYER" == "meta-python" && $? -eq 1 ]; then
             PREFIX=$(echo "$RECIPE_NAME" | cut -d'-' -f1)
             SUFFIX=$(echo "$RECIPE_NAME" | cut -d'-' -f2)
             RECIPE_NAME="${PREFIX}3-${SUFFIX}"
@@ -45,9 +45,13 @@ if [ ! -z "${COMMIT_LOG}" ]; then
 
         # Make sure what we've parsed is actually a python recipe.
         # If (and only if) it is, then add it to RECIPE_LIST
-        PYTHON_CHECK=$(echo "$RECIPE_NAME" | grep python3)
-        if [ $? -eq 0 ]; then
-            RECIPE_LIST+="${RECIPE_NAME} "
+        if [ "$LAYER == "meta-python" ]; then
+            PYTHON_CHECK=$(echo "$RECIPE_NAME" | grep python3)
+            if [ $? -eq 0 ]; then
+                RECIPE_LIST+="${RECIPE_NAME} "
+            fi
+        else
+            RECIPE_LIST+="${RECIPE_NAME}"
         fi
 
     done < <(printf '%s\n' "$COMMIT_LOG")
