@@ -5,7 +5,7 @@ metadata:
   name: meta-xfce-cronjob
   namespace: tekton-pipelines
 spec:
-  schedule: "0 5 * * *"
+  schedule: "0 16 * * *"
   jobTemplate:
     spec:
       template:

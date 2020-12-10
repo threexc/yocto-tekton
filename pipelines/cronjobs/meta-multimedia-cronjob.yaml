@@ -5,7 +5,7 @@ metadata:
   name: meta-multimedia-cronjob
   namespace: tekton-pipelines
 spec:
-  schedule: "0 9 * * *"
+  schedule: "0 12 * * *"
   jobTemplate:
     spec:
       template:

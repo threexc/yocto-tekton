@@ -5,7 +5,7 @@ metadata:
   name: meta-webserver-cronjob
   namespace: tekton-pipelines
 spec:
-  schedule: "0 4 * * *"
+  schedule: "0 14 * * *"
   jobTemplate:
     spec:
       template:

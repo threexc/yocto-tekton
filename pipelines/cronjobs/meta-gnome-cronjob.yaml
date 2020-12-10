@@ -5,7 +5,7 @@ metadata:
   name: meta-gnome-cronjob
   namespace: tekton-pipelines
 spec:
-  schedule: "0 6 * * *"
+  schedule: "0 8 * * *"
   jobTemplate:
     spec:
       template:

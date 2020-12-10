@@ -5,7 +5,7 @@ metadata:
   name: meta-initramfs-cronjob
   namespace: tekton-pipelines
 spec:
-  schedule: "0 8 * * *"
+  schedule: "0 18 * * *"
   jobTemplate:
     spec:
       template:

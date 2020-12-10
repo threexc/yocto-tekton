@@ -5,7 +5,7 @@ metadata:
   name: meta-perl-cronjob
   namespace: tekton-pipelines
 spec:
-  schedule: "0 3 * * *"
+  schedule: "0 6 * * *"
   jobTemplate:
     spec:
       template:
