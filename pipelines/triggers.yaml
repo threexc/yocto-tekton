@@ -35,7 +35,7 @@ spec:
     spec:
       pipelineRef:
         name: meta-openembedded-build-pipeline
-      timeout: "3h"
+      timeout: "2h"
       params:
       - name: layer
         value: $(tt.params.layer)
