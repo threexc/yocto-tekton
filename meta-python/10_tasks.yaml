@@ -63,7 +63,10 @@ spec:
 
         done < <(printf '%s\n' "$COMMIT_LOG")
 
-        echo $RECIPE_LIST | xargs bitbake
+        IMAGE_TARGET="core-image-full-cmdline"
+
+        echo "IMAGE_INSTALL_append = \" ${RECIPE_LIST}\"" >> conf/local.conf
+        echo $IMAGE_TARGET | xargs bitbake
         echo "The following list was sent to bitbake: "
         echo "${RECIPE_LIST}"
         echo -n "Yes" | tee $(results.built.path);
