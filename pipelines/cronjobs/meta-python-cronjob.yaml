@@ -6,6 +6,8 @@ metadata:
   namespace: tekton-pipelines
 spec:
   schedule: "0 4 * * *"
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
   jobTemplate:
     spec:
       template:
