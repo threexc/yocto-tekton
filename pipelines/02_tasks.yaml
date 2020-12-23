@@ -23,7 +23,7 @@ spec:
       echo "layer is $(params.layer)"
       echo "repo-dir is $(params.repo-dir)"
 
-      RECIPE_LIST=$(bash yocto-tekton/scripts/get-build-list.sh --layer "$(params.layer)")
+      RECIPE_LIST=$(bash yocto-tekton/pipelines/scripts/get-build-list.sh --layer="$(params.layer)")
 
       echo "${RECIPE_LIST}"
 
@@ -60,7 +60,7 @@ spec:
 
       # Clone the yocto-tekton repo so we can use the scripts
       if [ ! -d "yocto-tekton" ]; then
-          git clone --branch generic-layer-pipeline https://github.com/threexc/yocto-tekton.git
+          git clone --branch main https://github.com/threexc/yocto-tekton.git
       else
           (cd yocto-tekton && git pull --rebase)
       fi

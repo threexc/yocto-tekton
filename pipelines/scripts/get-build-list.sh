@@ -12,10 +12,10 @@ do
     shift
 done
 
-# Get the latest python recipe changes and bitbake them using --diff-filter for Added (A), Copied (C), 
+# Get the latest recipe changes and bitbake them using --diff-filter for Added (A), Copied (C), 
 # Modified (M), or Renamed (R) files. The filter character lines will always start with an upper-case 
 # letter (commit hashes don't use them). Also ignore deleted files (D flag to --diff-filter)
-COMMIT_LOG=$(git -C "$REPO_DIR" log --name-status --oneline origin/master..origin/master-next --find-renames --diff-filter=ACMR | grep "$LAYER" | grep "^[A-Z]")
+COMMIT_LOG=$(git -C "$REPO_DIR" log --name-status --oneline origin/master..origin/master-next --find-renames --diff-filter=ACMR | grep "$LAYER" | grep "^[A-Z]" | grep -E '.bb|.inc')
 RECIPE_NAME=""
 RECIPE_LIST=""
 
@@ -43,8 +43,7 @@ if [ ! -z "${COMMIT_LOG}" ]; then
             RECIPE_NAME="${PREFIX}3-${SUFFIX}"
         fi
 
-        # Make sure what we've parsed is actually a python recipe.
-        # If (and only if) it is, then add it to RECIPE_LIST
+        # Add recipes to the RECIPE_LIST variable
         if [ "$LAYER" == "meta-python" ]; then
             PYTHON_CHECK=$(echo "$RECIPE_NAME" | grep python3)
             if [ $? -eq 0 ]; then
