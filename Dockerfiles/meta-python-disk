@@ -1,0 +1,2 @@
+FROM scratch
+ADD --chown=107:107 meta-python-ptest-image-qemux86-64.iso /disk/
