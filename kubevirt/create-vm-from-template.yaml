@@ -1,0 +1,52 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: ClusterTask
+metadata:
+  annotations:
+    task.kubevirt.io/associatedServiceAccount: create-vm-task
+    templateName.params.task.kubevirt.io/type: vm-template
+    templateNamespace.params.task.kubevirt.io/type: namespace
+    templateParams.params.task.kubevirt.io/type: template-params-array
+    vmNamespace.params.task.kubevirt.io/type: namespace
+  labels:
+    task.kubevirt.io/type: create-vm-from-template
+    task.kubevirt.io/category: create-vm
+  name: create-vm-from-template
+  namespace: tekton-pipelines
+spec:
+  params:
+    - description: Name of a template to create VM from
+      name: templateName
+      type: string
+      default: meta-python-vmi
+    - description: Namespace of a template to create VM from (defaults to active namespace)
+      name: templateNamespace
+      type: string
+      default: "vm"
+    - description: Template params to pass when processing the template manifest. Eg [“NAME:my-vm”, “DESC:blue”]
+      name: templateParams
+      type: array
+      default: []
+    - description: Namespace where to create the VM (defaults to active namespace)
+      name: vmNamespace
+      type: string
+      default: "vm"
+  results:
+    - description: The name of a VM that was created
+      name: name
+    - description: The namespace of a VM that was created
+      name: namespace
+  steps:
+    - name: createvm
+      image: quay.io/suomiy/create-vm:v0.0.1
+      command:
+        - create-vm
+        - "--output=yaml"
+        - '--template-name'
+        - $(params.templateName)
+        - '--template-namespace'
+        - $(params.templateNamespace)
+        - '--template-params'
+        - $(params.templateParams)
+        - '--vm-namespace'
+        - $(params.vmNamespace)

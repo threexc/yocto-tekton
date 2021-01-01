@@ -1,0 +1,16 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: TaskRun
+metadata:
+  name: create-meta-python-vmi
+  namespace: tekton-pipelines
+spec:
+  serviceAccountName: create-vm-task
+  taskRef:
+    kind: ClusterTask
+    name: create-vm-from-template
+  params:
+    - name: templateName
+      value: meta-python-vm
+    - name: templateNamespace
+      value: vm

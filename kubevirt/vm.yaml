@@ -1,0 +1,27 @@
+apiVersion: kubevirt.io/v1alpha3
+kind: VirtualMachine
+metadata:
+  name: meta-python-vm
+  namespace: vm
+spec:
+  running: false
+  template:
+    metadata:
+      labels:
+        special: meta-python-vmi
+      name: meta-python-vmi
+      namespace: vm
+    spec:
+      domain:
+        devices:
+          disks:
+          - name: containerdisk
+            disk: {}
+        resources:
+          requests:
+            memory: 8192M
+      terminationGracePeriodSeconds: 0
+      volumes:
+        - name: containerdisk
+          containerDisk:
+            image: threexc/meta-python-test:latest

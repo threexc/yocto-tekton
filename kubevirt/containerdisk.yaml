@@ -1,0 +1,22 @@
+apiVersion: kubevirt.io/v1alpha3
+kind: VirtualMachineInstance
+metadata:
+  labels:
+    special: meta-python-disk
+  name: meta-python-disk
+  namespace: tekton-pipelines
+spec:
+  domain:
+    devices:
+      disks:
+      - name: containerdisk
+        disk: {}
+    resources:
+      requests:
+        memory: 8192M
+  terminationGracePeriodSeconds: 0
+  volumes:
+    - name: containerdisk
+      containerDisk:
+        image: threexc/meta-python-test:latest
+status: {}

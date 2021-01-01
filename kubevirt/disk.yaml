@@ -1,0 +1,27 @@
+apiVersion: kubevirt.io/v1alpha3
+kind: VirtualMachineInstance
+metadata:
+  labels:
+    special: meta-python-disk
+  name: meta-python-disk
+  namespace: tekton-pipelines
+spec:
+  domain:
+    devices:
+      disks:
+      - disk:
+          bus: virtio
+        name: host-disk
+    machine:
+      type: ""
+    resources:
+      requests:
+        memory: 8192M
+  terminationGracePeriodSeconds: 0
+  volumes:
+  - hostDisk:
+      capacity: 16Gi
+      path: /data/disk.img
+      type: DiskOrCreate
+    name: host-disk
+status: {}
