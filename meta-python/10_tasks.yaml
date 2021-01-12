@@ -77,6 +77,41 @@ spec:
 apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
+  name: meta-python-ptest
+  namespace: tekton-pipelines
+spec:
+  steps:
+    - name: run-ptest
+      image: registry.hub.docker.com/threexc/yocto-builder
+      securityContext:
+        privileged: true
+      workingDir: /workspace
+      script: |
+        #!/bin/bash
+        cd poky && source oe-init-build-env build
+        export LANG=en_US.UTF-8
+        runqemu slirp nographic qemuparams="-m 8192 -net user,hostfwd=tcp::2222-:22"
+      volumeMounts:
+      - name: meta-python-pvc
+        mountPath: /workspace
+  sidecars:
+    - name: run-ptest
+      image: registry.hub.docker.com/threexc/yocto-builder
+      securityContext:
+        privileged: true
+      workingDir: /workspace
+      script: |
+        #!/bin/bash
+        echo "Giving the VM time to boot..."
+        sleep 60
+        ssh -p 2222 root@10.0.2.15 "ptest-runner 2>&1" > ptest.log
+      volumeMounts:
+      - name: meta-python-pvc
+        mountPath: /workspace
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
   name: meta-python-setup-workspace
   namespace: tekton-pipelines
 spec:

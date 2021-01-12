@@ -13,3 +13,8 @@ spec:
      - meta-python-setup-workspace
     taskRef:
       name: meta-python-build
+  - name: meta-python-ptest
+    runAfter:
+      - meta-python-build
+    taskRef:
+      name: meta-python-ptest
