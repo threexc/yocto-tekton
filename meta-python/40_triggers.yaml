@@ -30,7 +30,7 @@ spec:
   triggers:
     - name: meta-python-build
       template:
-        name: meta-python-build-template
+        ref: meta-python-build-template
 ---
 apiVersion: triggers.tekton.dev/v1alpha1
 kind: TriggerTemplate
