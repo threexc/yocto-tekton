@@ -46,7 +46,7 @@ spec:
         (cd meta-openembedded && git checkout master-next && git pull --rebase)
 
         echo "Rebasing yocto-tekton to latest master..."
-        (cd yocto-tekton && git pull --rebase && git checkout refactor)
+        (cd yocto-tekton && git pull --rebase && git checkout main)
       volumeMounts:
       - name: build
         mountPath: /workspace
@@ -157,3 +157,25 @@ spec:
       volumeMounts:
       - name: build
         mountPath: /workspace
+    - name: build-and-push-ptest-container
+      image: gcr.io/kaniko-project/executor:latest
+      command:
+      - /kaniko/executor
+      args:
+      - --destination=yow-tgamblin-fedora2:31320/meta-python-ptest-image:latest
+      - --context=tar:///workspace/poky/build/tmp/deploy/images/qemux86-64/meta-python-ptest-image-qemux86-64.tar.bz2
+      volumeMounts:
+      - name: build
+        mountPath: /workspace
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: meta-python-run-ptest
+  namespace: tekton-pipelines
+spec:
+  steps:
+    - name: run-ptest
+      image: yow-tgamblin-fedora2:31320/meta-python-ptest-image:latest
+      command:
+      - ptest-runner
