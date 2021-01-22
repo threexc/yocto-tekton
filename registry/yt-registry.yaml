@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yt-registry
+  labels:
+    app: yt-registry
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: yt-registry
+  template:
+    metadata:
+      labels:
+        app: yt-registry
+    spec:
+      volumes:
+      - name: certs-vol
+        hostPath:
+          path: /opt/certs
+          type: Directory
+      - name: registry-vol
+        hostPath:
+          path: /opt/registry
+          type: Directory
+
+      containers:
+        - image: registry:2
+          name: yt-registry
+          imagePullPolicy: IfNotPresent
+          env:
+          - name: REGISTRY_HTTP_TLS_CERTIFICATE
+            value: "/certs/registry.crt"
+          - name: REGISTRY_HTTP_TLS_KEY
+            value: "/certs/registry.key"
+          ports:
+            - containerPort: 5000
+          volumeMounts:
+          - name: certs-vol
+            mountPath: /certs
+          - name: registry-vol
+            mountPath: /var/lib/registry

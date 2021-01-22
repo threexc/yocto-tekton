@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: yt-registry
+  name: yt-registry
+spec:
+  ports:
+  - port: 5000
+    nodePort: 31320
+    protocol: TCP
+    targetPort: 5000
+  selector:
+    app: yt-registry
+  type: NodePort
