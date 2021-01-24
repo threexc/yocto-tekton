@@ -11,3 +11,5 @@ spec:
   - name: meta-python-run-ptest
     taskRef:
       name: meta-python-run-ptest
+    runAfter:
+      - meta-python-build
