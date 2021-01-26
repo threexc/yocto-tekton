@@ -130,9 +130,9 @@ EOF
 14. Initialize the cluster: `kubeadm init
     --pod-network-cidr=10.244.0.0/16
 --cri-socket=/var/run/crio/crio.sock`
-15. `mkdir -p $HOME/.kube
-sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-sudo chown $(id -u):$(id -g) $HOME/.kube/config`
+15. `mkdir -p $HOME/.kube`
+    `sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config`
+    `sudo chown $(id -u):$(id -g) $HOME/.kube/config`
 16. Remove the taint from the master node (i.e. allow pods to start on
     the control node): `kubectl taint nodes --all
 node-role.kubernetes.io/master-`
