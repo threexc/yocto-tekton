@@ -1,5 +1,0 @@
-apiVersion: triggers.tekton.dev/v1alpha1
-kind: TriggerBinding
-metadata:
-  name: sstate-build-binding
-  namespace: tekton-pipelines
