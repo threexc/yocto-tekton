@@ -1,25 +1,19 @@
 # yocto-tekton
 
 Table of Contents
-=================
-
-   * [yocto-tekton](#yocto-tekton)
+=================                                                                                                      
+                                                           
+   * [yocto-tekton](#yocto-tekton)       
    * [Table of Contents](#table-of-contents)
-      * [Overview](#overview)
-      * [Dockerfiles](#dockerfiles)
+      * [Overview](#overview)                                                                                          
+      * [Dockerfiles](#dockerfiles)           
       * [Instructions for Setting Up Kubernetes and Tekton with CRI-O on Fedora 33](#instructions-for-setting-up-kubernetes-and-tekton-with-cri-o-on-fedora-33)
-      * [Using the meta-python Pipeline](#using-the-meta-python-pipeline)
+      * [The meta-python Pipeline](#the-meta-python-pipeline)
+         * [Overview](#overview-1)
          * [Instructions](#instructions)
          * [The Pipeline in Action - Tekton CLI](#the-pipeline-in-action---tekton-cli)
          * [The Pipeline in Action - Tekton Dashboard](#the-pipeline-in-action---tekton-dashboard)
-      * [The Shared State Deployment](#the-shared-state-deployment)
-         * [Automatic Shared State](#automatic-shared-state)
-         * [Instructions](#instructions-1)
-         * [Helm Chart](#helm-chart)
          * [Notes/Lessons Learned](#noteslessons-learned)
-         * [What Are These Things?!](#what-are-these-things)
-         * [Limitations](#limitations)
-      * [Using the poky Pipeline](#using-the-poky-pipeline)
       * [Frequently Asked Questions](#frequently-asked-questions)
       * [To-Do](#to-do)
       * [Credits](#credits)
@@ -152,40 +146,50 @@ even for single recipes to fail. I have found success with the
 meta-python pipeline with `pids_limit=4096`, but chances are this needs
 to be much higher for larger builds.
 
-## Using the meta-python Pipeline
+## The meta-python Pipeline
+
+### Overview
+
+The meta-python pipeline is an example of how one might build a CI/CD pipeline
+that performs common Yocto layer maintainer tasks. Using Kubernetes, Tekton,
+and the Yocto Project's container building ability, it performs the following
+tasks:
+
+1. Clones the poky, meta-openembedded, and yocto-tekton repositories (or
+   updates them to the latest master, master-next, and main commits
+   respectively if the repos are already present);
+2. Identifies any patches applied to the master-next branch of the
+   meta-openembedded layer that are for meta-python recipes and adds the recipe
+   names to a build list;
+3. Triggers a build of all of those recipes with bitbake;
+4. Builds the meta-python-ptest-image target as a container filesystem;
+5. Uses Kaniko to build a container image from the completed ptest image and
+   pushes it to a local registry;
+6. Pulls the image from that registry to run as the container for a test task,
+   and executes the "ptest-runner" command
 
 ### Instructions
 
-1. Edit the "volumes.yaml" file and set the hostPath.path value with
-   your preferred location for builds (make sure permissions are set,
-   and change the volume sizes if necessary)
-
+1. Ensure that the instructions in registry/ have been followed, and that the
+   deployment and service there have been applied.
 2. `kubectl apply -f` the following:
-    1. volumes.yaml
-    2. tasks.yaml
-    3. pipeline.yaml
-    4. serviceaccount.yaml
-    5. triggers.yaml
-    6. (Optional) Do a test run with `kubectl create -f pipeline-run.yaml`
+    1. 10_tasks.yaml
+    2. 20_pipeline.yaml
+    3. 30_serviceaccount.yaml
+    4. 40_triggers.yaml
 
 The meta-python pipeline will now trigger twice per day and build in the
 specified directory.
 
-**Note 1:** The triggertemplate.yaml, log-task-run.yaml,
-build-task-run.yaml, setup-workspace-task-run.yaml, and
-pipeline-run.yaml files have hard-coded paths in them at the moment
-which are specific to the author's system. You'll need to change them
-(or create the same paths) for them to work!
-
-**Note 2:** These instructions assume that you've already done the setup for
-the [sstate deployment](#sstate)
-
-**Note 3:** There are "run" versions of the tasks in the taskruns/
-directory, but they are not required to created with `kubectl create -f <filename>` 
-unless you want to run a manual build; the cronjob and eventlistener files will
-setup an automatic build process.
+**Note 1:** The TriggerTemplate spec in 40_triggers has a hostPath value of
+/tekton/data, which is specific to the author's system. If you want the
+pipeline build artifacts to be created in a different location, you will need
+to edit this field. Otherwise, you'll need to create the /tekton/data path on
+the cluster node and ensure it that the correct permissions are set.
 
 ### The Pipeline in Action - Tekton CLI
+
+OUTDATED - NEEDS UPDATE
 
 The following GIF shows the meta-python EventListener being triggered
 from a pod created using the Dockerfile-nettools container. The nettools
@@ -218,105 +222,12 @@ browsing the running meta-python pipeline via the Tekton Dashboard.
 
 ![meta-python pipeline](https://github.com/threexc/yocto-tekton/blob/main/media/meta-python-dashboard.gif)
 
-## The Shared State Deployment
-
-### Automatic Shared State
-
-The contents of the [sstate/automated](sstate/automated) directory will configure a 
-cronjob and eventlistener to rebuild the core-image-\* group of images in a
-directory once per day (similar to the contents of `meta-python`), which can 
-then be used in the `SSTATE_MIRROR` variable in builds. The deployment.yaml,
-service.yaml, pv.yaml, and pvc.yaml are used to provision that build space 
-and also to serve it as a browsable web interface in an httpd container.
-
-### Instructions
-
-`kubectl apply -f` the following:
-1. pv.yaml
-2. pvc.yaml
-3. deployment.yaml
-4. service.yaml
-5. sstate-build-task.yaml
-6. sstate-build-pipeline.yaml
-7. eventlistener.yaml
-8. serviceaccount.yaml
-9. triggertemplate.yaml
-10. triggerbinding.yaml
-11. cronjob.yaml
-
-**Note 1:** You may see warnings about the usage of `kubectl apply` vs
-`kubectl create`. These are OK - the proper way to use some resources
-(deployments, *Run types, etc.) is with the latter command, but they
-should still work with the former.
-
-**Note 2:** There are "run" versions of the pipelines and tasks, but they
-are not required to created with `kubectl create -f <filename>` unless
-you want to run a manual build; the cronjob and eventlistener files will
-setup an automatic build process.
-
-**Note 3:** You will need to modify the hard-coded paths in
-triggertemplate.yaml (and pipelinerun.yaml/taskrun.yaml) for things to
-work (or create the same paths on your build node(s)).
-
-### Helm Chart
-
-An example of a Helm chart that can be used to deploy the httpd server
-portion is in the `helm-chart` directory. It can be installed with the
-following command:
-
-`helm install <deployment_name> --namespace tekton-pipelines
-helm-chart/`
-
-Where <deployment_name> can be whatever you'd like (meta-python expects
-it to be "yocto-sstate" by default).
-
-**Note:** This process is mainly for demonstrative purposes right now -
-Helm appears to be too limited for supporting the Tekton CRDs like
-pipelines at the moment (see below).
 
 ### Notes/Lessons Learned
 
 - Helm doesn't like "generateName" fields (making adding the Tekton
   parts to the chart difficult):
   https://github.com/helm/helm/issues/3348
-
-### What Are These Things?!
-
-While the purpose/functionality of the setup and build YAML files may be
-fairly apparent from their content (and from other Tekton examples you
-may have read), where it gets tricky is the build triggering portion of
-ghe overall pipeline. More specifically, the combination of the
-following files serves the same purpose that you get from something like
-Jenkins' build pipeline with the "Build Periodically" option filled out:
-
-- eventlistener.yaml
-- serviceaccount.yaml
-- triggertemplate.yaml
-- triggerbinding.yaml (not actually used right now)
-- cronjob.yaml
-
-An EventListener, according to the
-[documentation](https://tekton.dev/docs/triggers/eventlisteners/),
-processes incoming HTTP events with JSON payloads and uses them to
-create Tekton resources via TriggerTemplates (and TriggerBindings, if
-you want to extract data from these events to pass to the resources).
-The cronjob for this pipeline uses `curl -X POST` to contact the
-EventListener without actually sending any data, since none is currently
-required to start the (mostly hard-coded) build pipeline. This will
-likely change in the future!
-
-### Limitations
-
-- No QEMU in containers for meta-python-ptest-image (yet), and therefore
-  the testimage-task.yaml steps have not been added to the meta-python
-  pipeline
-
-## Using the poky Pipeline
-
-This is a limited functionality poky pipeline - it will grab the names
-of recipes changed between origin/master and origin/master-next, and
-build those as long as the recipe filename (once the version number has
-been stripped) matches the actual recipe name.
 
 ## Frequently Asked Questions
 
@@ -360,8 +271,6 @@ username on Freenode IRC, or at `trevor.gamblin@windriver.com`.
 
 ## To-Do
 
-- Use configmaps and triggerbindings to remove hard-coding from all
-  pipelines
 - Better patch queue/identification for meta-python and poky pipelines
 - Start using stuff from the [Tekton
   Catalog](https://github.com/tektoncd/catalog)
