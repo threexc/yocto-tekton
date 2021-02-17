@@ -69,7 +69,7 @@ spec:
                   /workspace/meta-openembedded/meta-webserver \\
                   \"" > conf/bblayers.conf
           # Add required elements to local.conf for ptest image build
-          echo "IMAGE_FSTYPES = \"container\"" >> conf/local.conf
+          echo "IMAGE_FSTYPES = \"container tar.gz\"" >> conf/local.conf
           echo "DISTRO_FEATURES_append = \" ptest\"" >> conf/local.conf
           echo "PREFERRED_PROVIDER_virtual/kernel = \"linux-dummy\"" >> conf/local.conf
           echo "DISTRO_FEATURES_append = \" ptest systemd pam\"" >> conf/local.conf
@@ -154,7 +154,6 @@ spec:
         export LANG=en_US.UTF-8
         
         bitbake meta-python-ptest-image
-        bunzip2 -c /workspace/poky/build/tmp/deploy/images/qemux86-64/meta-python-ptest-image-qemux86-64.tar.bz2 | gzip -c > /workspace/poky/build/tmp/deploy/images/qemux86-64/meta-python-ptest-image-qemux86-64.tar.gz
         echo "FROM scratch" > /workspace/poky/build/tmp/deploy/images/qemux86-64/Dockerfile
         echo "ADD meta-python-ptest-image-qemux86-64.tar.gz /" >> /workspace/poky/build/tmp/deploy/images/qemux86-64/Dockerfile
       volumeMounts:
