@@ -7,7 +7,7 @@ metadata:
 spec:
   steps:
     - name: setup-workspace
-      image: registry.hub.docker.com/threexc/yocto-builder
+      image: registry.hub.docker.com/threexc/yocto-builder:33
       workingDir: /workspace
       script: |
         #!/bin/bash -xe
@@ -35,7 +35,7 @@ spec:
         mountPath: /workspace
 
     - name: update-repos
-      image: registry.hub.docker.com/threexc/yocto-builder
+      image: registry.hub.docker.com/threexc/yocto-builder:33
       workingDir: /workspace
       script: |
         #!/bin/bash -xe
@@ -52,7 +52,7 @@ spec:
         mountPath: /workspace
 
     - name: setup-conf
-      image: registry.hub.docker.com/threexc/yocto-builder
+      image: registry.hub.docker.com/threexc/yocto-builder:33
       workingDir: /workspace
       script: |
         #!/bin/bash -xe
@@ -80,7 +80,7 @@ spec:
         mountPath: /workspace
 
     - name: build-patches
-      image: registry.hub.docker.com/threexc/yocto-builder
+      image: registry.hub.docker.com/threexc/yocto-builder:33
       workingDir: /workspace
       script: |
         #!/bin/bash
@@ -142,7 +142,7 @@ spec:
         mountPath: /workspace
 
     - name: build-ptest-image
-      image: registry.hub.docker.com/threexc/yocto-builder
+      image: registry.hub.docker.com/threexc/yocto-builder:33
       workingDir: /workspace
       script: |
         #!/bin/bash
