@@ -1,0 +1,5 @@
+bases:
+  - tasks
+  - pipeline
+  - serviceaccount
+  - triggers
