@@ -1,2 +1,3 @@
 resources:
-  - 10_tasks.yaml
+  - build-patches.yaml
+  - build-ptest-container.yaml

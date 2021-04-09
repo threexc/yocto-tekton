@@ -1,2 +1,2 @@
 resources:
-  - 20_pipeline.yaml
+  - container-pipeline.yaml

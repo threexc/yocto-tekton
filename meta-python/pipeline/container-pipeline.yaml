@@ -1,0 +1,15 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: meta-python-build-pipeline
+  namespace: tekton-pipelines
+spec:
+  tasks:
+  - name: meta-python-build-patches
+    taskRef:
+      name: meta-python-build-patches
+  - name: meta-python-run-ptest-container
+    taskRef:
+      name: meta-python-run-ptest-container
+    runAfter:
+      - meta-python-build-patches

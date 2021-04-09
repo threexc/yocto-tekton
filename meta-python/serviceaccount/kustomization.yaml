@@ -1,2 +1,2 @@
 resources:
-  - 30_serviceaccount.yaml
+  - serviceaccount.yaml
