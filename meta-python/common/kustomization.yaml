@@ -1,5 +1,6 @@
 bases:
   - tasks
+  - serviceaccount
 
 resources:
   - namespace.yaml

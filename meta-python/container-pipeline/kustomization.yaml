@@ -2,7 +2,6 @@ bases:
   - ../common
   - tasks
   - pipeline
-  - serviceaccount
   - triggers
 
 namespace: meta-python
