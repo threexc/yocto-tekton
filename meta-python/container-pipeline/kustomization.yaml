@@ -4,3 +4,5 @@ bases:
   - pipeline
   - serviceaccount
   - triggers
+
+namespace: meta-python

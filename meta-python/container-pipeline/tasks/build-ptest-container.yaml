@@ -3,7 +3,6 @@ apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
   name: meta-python-run-ptest-container
-  namespace: tekton-pipelines
 spec:
   steps:
     - name: build-ptest-image

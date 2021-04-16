@@ -1,8 +1,7 @@
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
-  name: meta-python-build-pipeline
-  namespace: tekton-pipelines
+  name: meta-python-container-pipeline
 spec:
   tasks:
   - name: meta-python-build-patches
