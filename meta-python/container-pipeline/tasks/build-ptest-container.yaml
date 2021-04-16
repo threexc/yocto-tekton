@@ -19,7 +19,7 @@ spec:
         
         bitbake meta-python-ptest-image
         echo "FROM scratch" > /workspace/poky/build/tmp/deploy/images/qemux86-64/Dockerfile
-        echo "ADD meta-python-ptest-image-qemux86-64.tar.gz /" >> /workspace/poky/build/tmp/deploy/images/qemux86-64/Dockerfile
+        echo "ADD meta-python-ptest-image-qemux86-64.tar.bz2 /" >> /workspace/poky/build/tmp/deploy/images/qemux86-64/Dockerfile
       volumeMounts:
       - name: build
         mountPath: /workspace
