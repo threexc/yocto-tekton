@@ -1,3 +1,2 @@
 resources:
-  - build-patches.yaml
   - build-ptest-container.yaml
