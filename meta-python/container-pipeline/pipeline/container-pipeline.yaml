@@ -7,8 +7,11 @@ spec:
   - name: meta-python-build-patches
     taskRef:
       name: meta-python-build-patches
-  - name: meta-python-run-ptest-container
+  - name: meta-python-build-ptest-container
     taskRef:
-      name: meta-python-run-ptest-container
+      name: meta-python-build-ptest-container
     runAfter:
       - meta-python-build-patches
+  - name: meta-python-run-ptest
+    taskRef:
+      name: meta-python-run-ptest-container

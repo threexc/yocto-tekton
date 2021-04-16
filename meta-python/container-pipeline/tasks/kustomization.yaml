@@ -1,2 +1,3 @@
 resources:
   - build-ptest-container.yaml
+  - run-ptest.yaml

@@ -2,7 +2,7 @@
 apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
-  name: meta-python-run-ptest-container
+  name: meta-python-build-ptest-container
 spec:
   steps:
     - name: build-ptest-image
@@ -19,7 +19,7 @@ spec:
         
         bitbake meta-python-ptest-image
         echo "FROM scratch" > /workspace/poky/build/tmp/deploy/images/qemux86-64/Dockerfile
-        echo "ADD meta-python-ptest-image-qemux86-64.tar.bz2 /" >> /workspace/poky/build/tmp/deploy/images/qemux86-64/Dockerfile
+        echo "ADD meta-python-ptest-image-qemux86-64.tar.gz /" >> /workspace/poky/build/tmp/deploy/images/qemux86-64/Dockerfile
       volumeMounts:
       - name: build
         mountPath: /workspace
@@ -35,7 +35,3 @@ spec:
       volumeMounts:
       - name: build
         mountPath: /workspace
-    - name: run-ptest
-      image: yow-tgamblin-fedora2:31320/meta-python-ptest-image:latest
-      command:
-      - ptest-runner

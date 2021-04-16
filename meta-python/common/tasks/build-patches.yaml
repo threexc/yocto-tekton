@@ -80,6 +80,8 @@ spec:
           echo "DISTRO_FEATURES_append = \" ptest\"" >> conf/local.conf
           echo "DISTRO_FEATURES_append = \" ptest systemd pam\"" >> conf/local.conf
           echo "FORTRAN_forcevariable = \",fortran\"" >> conf/local.conf
+          echo "IMAGE_FSTYPES = \"tar.gz container\"" >> conf/local.conf
+          echo "PREFERRED_PROVIDER_virtual/kernel = \"linux-dummy\"" >> conf/local.conf
         fi
       volumeMounts:
       - name: build

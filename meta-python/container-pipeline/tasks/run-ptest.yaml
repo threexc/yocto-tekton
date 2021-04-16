@@ -1,0 +1,12 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: meta-python-run-ptest-container
+spec:
+  steps:
+    - name: run-ptest
+      image: yow-tgamblin-fedora2:31320/meta-python-ptest-image:latest
+      imagePullPolicy: Always
+      command:
+      - ptest-runner
