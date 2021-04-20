@@ -15,7 +15,7 @@ spec:
             args:
             - /bin/bash
             - -c
-            - curl -X POST http://el-meta-python-listener.tekton-pipelines.svc.cluster.local:8080
+            - curl -X POST http://el-meta-python-listener.meta-python.svc.cluster.local:8080
           restartPolicy: OnFailure
 ---
 apiVersion: triggers.tekton.dev/v1alpha1
