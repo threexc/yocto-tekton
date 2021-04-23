@@ -9,7 +9,7 @@ spec:
       image: registry.hub.docker.com/threexc/yocto-builder:33
       workingDir: /workspace
       script: |
-        #!/bin/bash
+        #!/bin/bash -e
         # Add yocto-tekton repo to PATH
         export PATH="/workspace/yocto-tekton/meta-python/scripts:$PATH"
 

@@ -10,7 +10,7 @@ spec:
       image: registry.hub.docker.com/threexc/yocto-builder:33
       workingDir: /workspace
       script: |
-        #!/bin/bash -xe
+        #!/bin/bash -e
         
         if [ -d "poky/build/conf" ]; then
             echo "Clearing old build conf..."
@@ -44,7 +44,7 @@ spec:
       image: registry.hub.docker.com/threexc/yocto-builder:33
       workingDir: /workspace
       script: |
-        #!/bin/bash -xe
+        #!/bin/bash -e
         echo "Rebasing poky to latest master..."
         (cd poky && git checkout master && git pull --rebase)
 
@@ -61,7 +61,7 @@ spec:
       image: registry.hub.docker.com/threexc/yocto-builder:33
       workingDir: /workspace
       script: |
-        #!/bin/bash -xe
+        #!/bin/bash -e
         if [ ! -d poky/build/conf/ ]; then
           cd poky && source oe-init-build-env build
           echo "BBLAYERS ?= \" \\
@@ -91,7 +91,7 @@ spec:
       image: registry.hub.docker.com/threexc/yocto-builder:33
       workingDir: /workspace
       script: |
-        #!/bin/bash
+        #!/bin/bash -e
         # Add yocto-tekton repo to PATH
         export PATH="/workspace/yocto-tekton/meta-python/scripts:$PATH"
         # Get the latest python recipe changes and bitbake them using --diff-filter for Added (A), Copied (C), 
