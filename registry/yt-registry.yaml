@@ -25,7 +25,7 @@ spec:
           type: Directory
 
       containers:
-        - image: registry:2
+        - image: mirror.gcr.io/library/registry:2
           name: yt-registry
           imagePullPolicy: IfNotPresent
           env:
