@@ -1,7 +1,8 @@
 bases:
   - ../common
-  - tasks
+  - cronjob
   - pipeline
+  - tasks
   - triggers
 
 namespace: meta-python

@@ -1,35 +1,4 @@
 ---
-apiVersion: batch/v1beta1
-kind: CronJob
-metadata:
-  name: meta-python-cronjob
-spec:
-  schedule: "0 */12 * * *"
-  jobTemplate:
-    spec:
-      template:
-        spec:
-          containers:
-          - name: meta-python-nettools
-            image: threexc/nettools
-            args:
-            - /bin/bash
-            - -c
-            - curl -X POST http://el-meta-python-listener.meta-python.svc.cluster.local:8080
-          restartPolicy: OnFailure
----
-apiVersion: triggers.tekton.dev/v1alpha1
-kind: EventListener
-metadata:
-  name: meta-python-listener
-spec:
-  serviceAccountName: tekton-triggers-sa
-  serviceType: NodePort
-  triggers:
-    - name: meta-python-build
-      template:
-        ref: meta-python-build-template
----
 apiVersion: triggers.tekton.dev/v1alpha1
 kind: TriggerTemplate
 metadata:
