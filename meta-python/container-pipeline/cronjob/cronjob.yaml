@@ -1,5 +1,5 @@
 ---
-apiVersion: batch/v1beta1
+apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: meta-python-cronjob
@@ -12,8 +12,6 @@ spec:
           containers:
           - name: meta-python-nettools
             image: threexc/nettools
-            args:
-            - /bin/bash
-            - -c
-            - curl -X POST http://el-meta-python-listener.meta-python.svc.cluster.local:8080 -H 'Content-Type: application/json' -d '{}'
+            command: ["/bin/bash"]
+            args: ["-c", "curl -X POST http://el-meta-python-listener.meta-python.svc.cluster.local:8080 -H 'Content-Type: application/json' -d '{}'"]
           restartPolicy: OnFailure
