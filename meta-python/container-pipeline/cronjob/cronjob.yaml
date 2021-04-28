@@ -15,5 +15,5 @@ spec:
             args:
             - /bin/bash
             - -c
-            - curl -X POST http://el-meta-python-listener.meta-python.svc.cluster.local:8080
+            - curl -X POST http://el-meta-python-listener.meta-python.svc.cluster.local:8080 -H 'Content-Type: application/json' -d '{}'
           restartPolicy: OnFailure
