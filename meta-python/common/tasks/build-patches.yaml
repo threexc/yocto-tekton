@@ -61,7 +61,7 @@ spec:
       image: registry.hub.docker.com/threexc/yocto-builder:33
       workingDir: /workspace
       script: |
-        #!/bin/bash -e
+        #!/bin/bash
         if [ ! -d poky/build/conf/ ]; then
           cd poky && source oe-init-build-env build
           echo "BBLAYERS ?= \" \\
