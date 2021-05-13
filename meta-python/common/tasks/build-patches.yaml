@@ -91,13 +91,15 @@ spec:
       image: registry.hub.docker.com/threexc/yocto-builder:33
       workingDir: /workspace
       script: |
-        #!/bin/bash -e
+        #!/bin/bash
         # Add yocto-tekton repo to PATH
         export PATH="/workspace/yocto-tekton/meta-python/scripts:$PATH"
         # Get the latest python recipe changes and bitbake them using --diff-filter for Added (A), Copied (C), 
         # Modified (M), or Renamed (R) files. The filter character lines will always start with an upper-case 
         # letter (commit hashes don't use them). Also ignore deleted files (D flag to --diff-filter)
         COMMIT_LOG="$(get-recipe-changes.sh)"
+
+        echo "${COMMIT_LOG}"
 
         # Exit cleanly if there is no difference between master and master-next
         if [ -z "${COMMIT_LOG}" ]; then
