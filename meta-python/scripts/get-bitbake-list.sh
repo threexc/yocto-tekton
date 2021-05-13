@@ -1,5 +1,6 @@
 #!/bin/bash
 
+RECIPE_LIST=""
 # Read line-by-line from $COMMIT_LOG, and get the recipe filenames. Make sure to handle the case where
 # --diff-filter shows three words (e.g. when a version upgrade is made, it shows the diff-filter flag, 
 # the old filename, and the new filename
@@ -32,5 +33,6 @@ do
 	  RECIPE_LIST+="${RECIPE_NAME} "
   fi
 
-  echo $RECIPE_LIST
 done < <(printf '%s\n' "$1")
+
+echo $RECIPE_LIST
