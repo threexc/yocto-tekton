@@ -1,2 +1,3 @@
 resources:
   - build-patches.yaml
+  - update-workspace.yaml

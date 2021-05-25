@@ -1,0 +1,58 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: meta-python-update-workspace
+  namespace: tekton-pipelines
+spec:
+  steps:
+    - name: setup-workspace
+      image: registry.hub.docker.com/threexc/yocto-builder:33
+      workingDir: /workspace
+      script: |
+        #!/bin/bash -e
+        
+        if [ -d "poky/build/conf" ]; then
+            echo "Clearing old build conf..."
+            rm -rf poky/build/conf
+        fi
+
+        if [ -d "poky/build/tmp" ]; then
+            echo "Clearing old build outputs..."
+            rm -rf poky/build/tmp
+        fi
+
+        if [ ! -d "poky" ]; then
+            echo "Cloning poky repo..."
+            git clone git://git.yoctoproject.org/poky
+        fi
+
+        if [ ! -d "meta-openembedded" ]; then
+            echo "Cloning meta-openembedded repo..."
+            git clone git://git.openembedded.org/meta-openembedded
+        fi
+
+        if [ ! -d "yocto-tekton" ]; then
+            echo "Cloning yocto-tekton repo..."
+            git clone https://github.com/threexc/yocto-tekton.git
+        fi
+      volumeMounts:
+      - name: build
+        mountPath: /workspace
+
+    - name: update-repos
+      image: registry.hub.docker.com/threexc/yocto-builder:33
+      workingDir: /workspace
+      script: |
+        #!/bin/bash -e
+        echo "Rebasing poky to latest master..."
+        (cd poky && git checkout master && git pull --rebase)
+
+        echo "Rebasing meta-openembedded to latest master-next..."
+        (cd meta-openembedded && git checkout master-next && git pull --rebase)
+
+        echo "Rebasing yocto-tekton to latest master..."
+        (cd yocto-tekton && git pull --rebase && git checkout main)
+      volumeMounts:
+      - name: build
+        mountPath: /workspace

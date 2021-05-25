@@ -4,9 +4,19 @@ metadata:
   name: meta-python-container-pipeline
 spec:
   tasks:
+  - name: meta-python-update-workspace
+    taskRef:
+      name: meta-python-update-workspace
+  - name: meta-python-setup-container-conf
+    taskRef:
+      name: meta-python-setup-container-conf
+    runAfter:
+      - meta-python-update-workspace
   - name: meta-python-build-patches
     taskRef:
       name: meta-python-build-patches
+    runAfter:
+      - meta-python-setup-container-conf
   - name: meta-python-build-ptest-container
     taskRef:
       name: meta-python-build-ptest-container
