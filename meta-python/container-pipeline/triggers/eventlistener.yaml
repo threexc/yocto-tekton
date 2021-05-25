@@ -2,7 +2,7 @@
 apiVersion: triggers.tekton.dev/v1alpha1
 kind: EventListener
 metadata:
-  name: meta-python-listener
+  name: meta-python-container-listener
 spec:
   serviceAccountName: tekton-triggers-sa
   serviceType: NodePort
