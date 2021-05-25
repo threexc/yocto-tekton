@@ -1,0 +1,3 @@
+resources:
+  - yt-registry-svc.yaml
+  - yt-registry.yaml

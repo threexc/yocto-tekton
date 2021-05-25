@@ -2,6 +2,7 @@ bases:
   - ../common
   - cronjob
   - pipeline
+  - registry
   - tasks
   - triggers
 
