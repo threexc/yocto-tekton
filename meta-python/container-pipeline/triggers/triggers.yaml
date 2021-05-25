@@ -17,4 +17,4 @@ spec:
         volumes:
         - name: build
           hostPath:
-            path: /tekton/data
+            path: /tekton/pipelines/container
