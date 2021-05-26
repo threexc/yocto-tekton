@@ -16,7 +16,9 @@ spec:
         # Move into poky directory, remove old conf, source build
         cd poky && source oe-init-build-env build
         export LANG=en_US.UTF-8
-        
+        echo "TEST_SERVER_IP = \"$(awk 'END{print $1}' /etc/hosts)\""
+        echo "TEST_SERVER_IP = \"$(awk 'END{print $1}' /etc/hosts)\"" >> conf/local.conf
+
         bitbake -c testimage meta-python-ptest-image
       volumeMounts:
       - name: build
