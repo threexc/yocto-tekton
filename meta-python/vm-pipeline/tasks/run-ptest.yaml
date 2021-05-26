@@ -1,0 +1,23 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: meta-python-run-ptest-vm
+spec:
+  steps:
+    - name: run-ptest
+      image: registry.hub.docker.com/threexc/yocto-builder:33
+      workingDir: /workspace
+      script: |
+        #!/bin/bash -e
+        # Add yocto-tekton repo to PATH
+        export PATH="/workspace/yocto-tekton/meta-python/scripts:$PATH"
+
+        # Move into poky directory, remove old conf, source build
+        cd poky && source oe-init-build-env build
+        export LANG=en_US.UTF-8
+        
+        bitbake -c testimage meta-python-ptest-image
+      volumeMounts:
+      - name: build
+        mountPath: /workspace

@@ -1,0 +1,29 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: meta-python-vm-pipeline
+spec:
+  tasks:
+  - name: meta-python-update-workspace
+    taskRef:
+      name: meta-python-update-workspace
+  - name: meta-python-setup-vm-conf
+    taskRef:
+      name: meta-python-setup-vm-conf
+    runAfter:
+      - meta-python-update-workspace
+  - name: meta-python-build-patches
+    taskRef:
+      name: meta-python-build-patches
+    runAfter:
+      - meta-python-setup-vm-conf
+  - name: meta-python-build-ptest-vm
+    taskRef:
+      name: meta-python-build-ptest-vm
+    runAfter:
+      - meta-python-build-patches
+  - name: meta-python-run-ptest
+    taskRef:
+      name: meta-python-run-ptest-vm
+    runAfter:
+      - meta-python-build-ptest-vm

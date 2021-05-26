@@ -1,0 +1,17 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: meta-python-vm-cronjob
+spec:
+  schedule: "0 6 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: meta-python-nettools
+            image: registry.hub.docker.com/threexc/nettools
+            command: ["/bin/bash"]
+            args: ["-c", "curl -X POST http://el-meta-python-vm-listener.meta-python.svc.cluster.local:8080 -H 'Content-Type: application/json' -d '{}'"]
+          restartPolicy: OnFailure

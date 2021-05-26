@@ -1,0 +1,13 @@
+---
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: EventListener
+metadata:
+  name: meta-python-vm-listener
+spec:
+  serviceAccountName: tekton-triggers-sa
+  serviceType: NodePort
+  triggers:
+    - name: meta-python-build-vm
+      template:
+        ref: meta-python-build-vm-template
+
