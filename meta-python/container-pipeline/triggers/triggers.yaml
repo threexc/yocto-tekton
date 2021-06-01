@@ -2,7 +2,7 @@
 apiVersion: triggers.tekton.dev/v1alpha1
 kind: TriggerTemplate
 metadata:
-  name: meta-python-build-template
+  name: meta-python-container-build-template
 spec:
   resourcetemplates:
   - apiVersion: tekton.dev/v1beta1
@@ -17,4 +17,4 @@ spec:
         volumes:
         - name: build
           hostPath:
-            path: /tekton/pipelines/container
+            path: /tekton/pipelines/meta-python

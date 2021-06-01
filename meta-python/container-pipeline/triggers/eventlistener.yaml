@@ -9,5 +9,5 @@ spec:
   triggers:
     - name: meta-python-build
       template:
-        ref: meta-python-build-template
+        ref: meta-python-container-build-template
 
