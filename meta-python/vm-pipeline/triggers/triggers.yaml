@@ -17,4 +17,4 @@ spec:
         volumes:
         - name: build
           hostPath:
-            path: /tekton/pipelines/vm
+            path: /tekton/pipelines/meta-python
