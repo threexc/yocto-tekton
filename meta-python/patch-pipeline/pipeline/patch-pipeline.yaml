@@ -1,0 +1,19 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: meta-python-patch-pipeline
+spec:
+  tasks:
+  - name: update-workspace
+    taskRef:
+      name: meta-python-update-workspace
+  - name: setup-patch-conf
+    taskRef:
+      name: meta-python-setup-patch-conf
+    runAfter:
+      - update-workspace
+  - name: build-patches
+    taskRef:
+      name: meta-python-build-patches
+    runAfter:
+      - setup-patch-conf

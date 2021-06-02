@@ -1,0 +1,3 @@
+resources:
+  - build-patches.yaml
+  - setup-patch-conf.yaml

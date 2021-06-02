@@ -1,0 +1,29 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: meta-python-setup-patch-conf
+  namespace: tekton-pipelines
+spec:
+  steps:
+    - name: setup-conf
+      image: registry.hub.docker.com/threexc/yocto-builder:33
+      workingDir: /workspace
+      script: |
+        #!/bin/bash
+        if [ ! -d poky/build/conf/ ]; then
+          cd poky && source oe-init-build-env build
+          echo "BBLAYERS ?= \" \\
+                  /workspace/poky/meta \\
+                  /workspace/poky/meta-poky \\
+                  /workspace/poky/meta-yocto-bsp \\
+                  /workspace/meta-openembedded/meta-python \\
+                  /workspace/meta-openembedded/meta-oe \\
+                  /workspace/meta-openembedded/meta-networking \\
+                  /workspace/meta-openembedded/meta-filesystems \\
+                  /workspace/meta-openembedded/meta-webserver \\
+                  \"" > conf/bblayers.conf
+        fi
+      volumeMounts:
+      - name: build
+        mountPath: /workspace
