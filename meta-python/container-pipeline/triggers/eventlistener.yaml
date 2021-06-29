@@ -5,7 +5,6 @@ metadata:
   name: meta-python-container-listener
 spec:
   serviceAccountName: tekton-triggers-sa
-  serviceType: NodePort
   triggers:
     - name: meta-python-build
       template:
