@@ -28,7 +28,7 @@ spec:
       command:
       - /kaniko/executor
       args:
-      - --destination=yow-tgamblin-fedora2:31320/meta-python-ptest-image:latest
+      - --destination=yow-tgamblin-fedora3:31320/meta-python-ptest-image:latest
       - --context=dir:///workspace/poky/build/tmp/deploy/images/qemux86-64/
       - --dockerfile=/workspace/poky/build/tmp/deploy/images/qemux86-64/Dockerfile
       - --skip-tls-verify
