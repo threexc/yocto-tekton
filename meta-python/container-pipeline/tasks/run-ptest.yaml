@@ -6,7 +6,7 @@ metadata:
 spec:
   steps:
     - name: run-ptest
-      image: yow-tgamblin-fedora2:31320/meta-python-ptest-image:latest
+      image: 192.168.0.128:31320/meta-python-ptest-image:latest
       imagePullPolicy: Always
       command:
       - ptest-runner
