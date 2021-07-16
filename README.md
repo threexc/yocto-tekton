@@ -1,22 +1,19 @@
 # yocto-tekton
 
 Table of Contents
-=================                                                                                                      
-                                                           
-   * [yocto-tekton](#yocto-tekton)       
-   * [Table of Contents](#table-of-contents)
-      * [Overview](#overview)                                                                                          
-      * [Dockerfiles](#dockerfiles)           
-      * [Instructions for Setting Up Kubernetes and Tekton with CRI-O on Fedora 33](#instructions-for-setting-up-kubernetes-and-tekton-with-cri-o-on-fedora-33)
-      * [The meta-python Pipeline](#the-meta-python-pipeline)
-         * [Overview](#overview-1)
-         * [Instructions](#instructions)
-         * [The Pipeline in Action - Tekton CLI](#the-pipeline-in-action---tekton-cli)
-         * [The Pipeline in Action - Tekton Dashboard](#the-pipeline-in-action---tekton-dashboard)
-         * [Notes/Lessons Learned](#noteslessons-learned)
-      * [Frequently Asked Questions](#frequently-asked-questions)
-      * [To-Do](#to-do)
-      * [Credits](#credits)
+=================
+
+* [yocto-tekton](#yocto-tekton)
+   * [Overview](#overview)
+   * [Dockerfiles](#dockerfiles)
+   * [Instructions for Setting Up Kubernetes and Tekton with CRI-O on Fedora](#instructions-for-setting-up-kubernetes-and-tekton-with-cri-o-on-fedora)
+   * [The meta-python Pipeline](#the-meta-python-pipeline)
+      * [Overview and Usage](#overview-and-usage)
+      * [The nettools Pod](#the-nettools-pod)
+      * [Notes/Lessons Learned](#noteslessons-learned)
+   * [Frequently Asked Questions](#frequently-asked-questions)
+   * [To-Do](#to-do)
+   * [Credits](#credits)
 
 ## Overview
 
@@ -46,7 +43,7 @@ content.
    (e.g. if you want to make sure that an httpd deployment is exposed
    where you think it is)
 
-## Instructions for Setting Up Kubernetes and Tekton with CRI-O on Fedora 33
+## Instructions for Setting Up Kubernetes and Tekton with CRI-O on Fedora
 
 The following steps are meant specifically for Fedora machines, but you
 should be able to build a cluster on other distros using a similar
@@ -148,57 +145,61 @@ to be much higher for larger builds.
 
 ## The meta-python Pipeline
 
-### Overview
+### Overview and Usage
 
-The meta-python pipeline is an example of how one might build a CI/CD pipeline
-that performs common Yocto layer maintainer tasks. Using Kubernetes, Tekton,
-and the Yocto Project's container building ability, it performs the following
-tasks:
+The meta-python pipelines are examples of how one might build a CI/CD pipeline
+that performs common Yocto layer maintainer tasks. There are two
+different pipelines:
 
-1. Clones the poky, meta-openembedded, and yocto-tekton repositories (or
-   updates them to the latest master, master-next, and main commits
-   respectively if the repos are already present);
-2. Identifies any patches applied to the master-next branch of the
+1. patch-pipeline
+2. container-pipeline
+
+Both of these share a common task, "update-workspace", which clones the poky, 
+meta-openembedded, and yocto-tekton repositories into the hostPath specified in
+the pipelines (or updates these repositories to the latest master, master-next, 
+and main commits, respectively, if the repos are already present). Each
+pipeline also comes with a distinct EventListener and CronJob that will
+automatically trigger them once per day.
+
+patch-pipeline does the following:
+1. Identify any patches applied to the master-next branch of the
    meta-openembedded layer that are for meta-python recipes and adds the recipe
    names to a build list;
-3. Triggers a build of all of those recipes with bitbake;
-4. Builds the meta-python-ptest-image target as a container filesystem;
-5. Uses Kaniko to build a container image from the completed ptest image and
+2. Triggers a build of all of those recipes with bitbake;
+3. Outputs a short list of all of the identified and built recipes after
+   completion (if the builds succeeded)
+
+container-pipeline:
+1. Builds the meta-python-ptest-image target as a container filesystem;
+2. Uses Kaniko to build a container image from the completed ptest image and
    pushes it to a local registry;
-6. Pulls the image from that registry to run as the container for a test task,
+3. Pulls the image from that registry to run as the container for a test task,
    and executes the "ptest-runner" command
 
-### Instructions
+Both of these pipelines make basic use of Kubernetes' built-in Kustomize
+functionality to simplify templating the individual pipelines, share
+resource templates (such as the aforementioned update-workspace task),
+and instantiate supporting services (such as the yt-registry deployment
+that container-pipeline uses to store its test images). For the
+end-user, this ultimately means that adding these pipelines to the
+single-node cluster can be as simple as running this command inside the
+container-pipeline and/or patch-pipeline directories:
 
-1. Ensure that the instructions in registry/ have been followed, and that the
-   deployment and service there have been applied.
-2. `kubectl apply -f` the following:
-    1. 10_tasks.yaml
-    2. 20_pipeline.yaml
-    3. 30_serviceaccount.yaml
-    4. 40_triggers.yaml
+`kubectl apply -k .`
 
-The meta-python pipeline will now trigger twice per day and build in the
-specified directory.
+**Note:** The TriggerTemplate spec in each pipeline has a hostPath value of
+/tekton/pipelines/meta-python, which is specific to the author's system. If 
+you want the pipeline build artifacts to be created in a different location, 
+you will need to edit this field, or create the /tekton/pipelines/meta-python 
+path on the cluster node and ensure it that the correct permissions are set.
 
-**Note 1:** The TriggerTemplate spec in 40_triggers has a hostPath value of
-/tekton/data, which is specific to the author's system. If you want the
-pipeline build artifacts to be created in a different location, you will need
-to edit this field. Otherwise, you'll need to create the /tekton/data path on
-the cluster node and ensure it that the correct permissions are set.
+### The nettools Pod
 
-### The Pipeline in Action - Tekton CLI
-
-OUTDATED - NEEDS UPDATE
-
-The following GIF shows the meta-python EventListener being triggered
-from a pod created using the Dockerfile-nettools container. The nettools
-container is mainly meant to help test k8s network configuration, but
-since it can reach the EL, we can use it to manually trigger a new 
-meta-python pipeline run by sending an empty POST (instead of waiting
-for the meta-python cronjob to do it):
-
-`curl -X POST http://el-meta-python-listener.tekton-pipelines.svc.cluster.local:8080`
+While both meta-python pipelines feature automatic runs thanks to their
+CronJob/EventListener combinations, it is possible to trigger them
+manually as required. To help in doing so, the author also created a
+"nettools" pod for the single-node cluster that can be used to (among
+other things) trigger the builds.
 
 The nettools pod is created by running:
 
@@ -209,19 +210,13 @@ to it by running:
 
 `kubectl exec -it nettools -- /bin/bash`
 
-Finally, `tkn pipelinerun logs --last -f -n tekton-pipelines` allows us
-to follow the logs of the last pipelinerun in the tekton-pipelines
-namespace.
+And then running the following (check the EventListener naming
+conventions for exact syntax):
 
-![meta-python pipeline](https://github.com/threexc/yocto-tekton/blob/main/media/extended_demo.gif)
+`curl -X POST http://el-meta-python-listener.tekton-pipelines.svc.cluster.local:8080`
 
-### The Pipeline in Action - Tekton Dashboard
-
-This view is the same idea as the CLI example above, except we're
-browsing the running meta-python pipeline via the Tekton Dashboard.
-
-![meta-python pipeline](https://github.com/threexc/yocto-tekton/blob/main/media/meta-python-dashboard.gif)
-
+Finally, `tkn pipelinerun logs --last -f -n tekton-pipelines` or the
+Tekton Dashboard allow viewing of the in-progress or complete pipelines.
 
 ### Notes/Lessons Learned
 
@@ -252,22 +247,6 @@ met ahead of time. It is possible to run with swap by using the
 and stable results are not guaranteed. See [this
 link](https://github.com/kubernetes/kubernetes/issues/53533) for more
 info.
-
-3. **How Can I Contribute?**
-
-The yocto-tekton project is still in the early stages and much is still
-being decided, but if you're interested in helping out, you could do one
-or more of the following (as examples):
-
-   - Test out the setup and usage instructions and report any
-     inconsistencies or problems you encounter
-   - Experiment with other k8s services, container runtimes, etc.
-   - Assist in making the tasks run as part of the meta-python and poky
-     pipelines more robust
-
-Submitting pull requests, and/or discussing via opening issues are the
-best avenues right now. You can also reach Trevor via the `tgamblin`
-username on Freenode IRC, or at `trevor.gamblin@windriver.com`.
 
 ## To-Do
 
