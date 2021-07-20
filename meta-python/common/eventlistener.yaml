@@ -1,0 +1,24 @@
+---
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: EventListener
+metadata:
+  name: meta-python-listener
+spec:
+  serviceAccountName: tekton-triggers-sa
+  triggers:
+    - name: meta-python-container-build
+      template:
+        ref: meta-python-container-build-template
+      interceptors:
+        - cel:
+            filter: >-
+              'trigger_template' in body &&
+              body['trigger_template'] == 'container'
+    - name: meta-python-patch-build
+      template:
+        ref: meta-python-patch-build-template
+      interceptors:
+        - cel:
+            filter: >-
+              'trigger_template' in body &&
+              body['trigger_template'] == 'patch'
