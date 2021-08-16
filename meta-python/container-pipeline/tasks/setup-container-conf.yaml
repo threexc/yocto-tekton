@@ -26,9 +26,9 @@ spec:
           # Add required elements to local.conf for ptest image build
           echo "INHERIT += \"testimage\"" >> conf/local.conf
           echo "TEST_SUITES = \"ping ssh rpm ptest\"" >> conf/local.conf
-          echo "DISTRO_FEATURES_append = \" ptest\"" >> conf/local.conf
-          echo "DISTRO_FEATURES_append = \" ptest systemd pam\"" >> conf/local.conf
-          echo "FORTRAN_forcevariable = \",fortran\"" >> conf/local.conf
+          echo "DISTRO_FEATURES:append = \" ptest\"" >> conf/local.conf
+          echo "DISTRO_FEATURES:append = \" ptest systemd pam\"" >> conf/local.conf
+          echo "FORTRAN:forcevariable = \",fortran\"" >> conf/local.conf
           echo "IMAGE_FSTYPES = \"tar.gz container\"" >> conf/local.conf
           echo "PREFERRED_PROVIDER_virtual/kernel = \"linux-dummy\"" >> conf/local.conf
         fi
