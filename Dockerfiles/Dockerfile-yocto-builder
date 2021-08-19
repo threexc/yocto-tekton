@@ -36,6 +36,7 @@ RUN \
     libgcc.i686 \
     libgcc.x86_64 \
     libnsl2-devel \
+    lz4 \
     make \
     mesa-libGL \
     mesa-libGLU \
@@ -66,6 +67,7 @@ RUN \
     unzip \
     wget \
     which \
+    zstd \
     xz && \
     dnf --noplugins clean all && \
     rm -rf /var/cache/dnf && \
