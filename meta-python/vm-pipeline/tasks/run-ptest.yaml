@@ -6,7 +6,7 @@ metadata:
 spec:
   steps:
     - name: run-ptest
-      image: registry.hub.docker.com/threexc/yocto-builder:33
+      image: registry.hub.docker.com/threexc/yocto-builder:34
       workingDir: /workspace
       script: |
         #!/bin/bash -e
