@@ -127,17 +127,18 @@ node-role.kubernetes.io/master-`
 so that the network pods run
 19. Install Tekton Pipelines: `kubectl apply --filename https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml`
 20. Install Tekton Triggers: `kubectl apply --filename https://storage.googleapis.com/tekton-releases/triggers/latest/release.yaml`
-21. Install Tekton Dashboard: `kubectl apply --filename https://github.com/tektoncd/dashboard/releases/latest/download/tekton-dashboard-release.yaml`
-22. (Recommended) Get the [Tekton CLI](https://tekton.dev/docs/cli/)
-23. (Recommended) Install [k9s](https://github.com/derailed/k9s)
-24. To make the Tekton Dashboard accessible from remote machines, run
+21. Install Tekton Interceptors: `kubectl apply --filename https://storage.googleapis.com/tekton-releases/triggers/latest/interceptors.yaml`
+22. Install Tekton Dashboard: `kubectl apply --filename https://github.com/tektoncd/dashboard/releases/latest/download/tekton-dashboard-release.yaml`
+23. (Recommended) Get the [Tekton CLI](https://tekton.dev/docs/cli/)
+24. (Recommended) Install [k9s](https://github.com/derailed/k9s)
+25. To make the Tekton Dashboard accessible from remote machines, run
     `kubectl edit svc tekton-dashboard -n tekton-pipelines`, find the
 `spec.type` field, and change it from `clusterIP` to `NodePort`, then
 save and exit. Running `kubectl get svc -A` will then show you a list of
 services running in the cluster, including the tekton-dashboard, which
 will have a port number assigned to it. This can be accessed from your
 browser by visiting `<NodeIP>:<NodePort>`.
-25. Edit /etc/crio/crio.conf and change the `pids_limit` field to use a
+26. Edit /etc/crio/crio.conf and change the `pids_limit` field to use a
     higher value. Keeping it at 1024 will almost certainly cause builds
 even for single recipes to fail. I have found success with the
 meta-python pipeline with `pids_limit=4096`, but chances are this needs
