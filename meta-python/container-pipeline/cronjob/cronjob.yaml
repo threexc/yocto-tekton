@@ -4,7 +4,7 @@ kind: CronJob
 metadata:
   name: meta-python-container-cronjob
 spec:
-  schedule: "0 2 * * *"
+  schedule: "0 4 * * *"
   jobTemplate:
     spec:
       template:
