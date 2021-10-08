@@ -14,6 +14,14 @@ spec:
             filter: >-
               'trigger_template' in body &&
               body['trigger_template'] == 'container'
+    - name: meta-python-packagegroup-build
+      template:
+        ref: meta-python-packagegroup-build-template
+      interceptors:
+        - cel:
+            filter: >-
+              'trigger_template' in body &&
+              body['trigger_template'] == 'packagegroup'
     - name: meta-python-patch-build
       template:
         ref: meta-python-patch-build-template
