@@ -1,4 +1,0 @@
-resources:
-  - setup-vm-conf.yaml
-  - build-ptest-vm.yaml
-  - run-ptest.yaml
