@@ -78,7 +78,7 @@ EOF
    /etc/selinux/config`
 3. Enable cri-o nightly repo: 
 ```
-dnf -y module enable cri-o:nightly
+dnf -y module enable cri-o:1.22
 dnf install -y cri-o
 ```
 4. Install kubeadm, kubelet, kubectl: `dnf  install -y
