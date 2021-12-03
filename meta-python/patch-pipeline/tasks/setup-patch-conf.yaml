@@ -25,6 +25,8 @@ spec:
                   \"" > conf/bblayers.conf
           echo "DISTRO_FEATURES:append = \" ptest systemd pam\"" >> conf/local.conf
           echo "FORTRAN:forcevariable = \",fortran\"" >> conf/local.conf
+          echo "BB_NUMBER_THREADS = \"8\"" >> conf/local.conf
+          echo "PARALLEL_MAKE = \"-j 8\"" >> conf/local.conf
         fi
       volumeMounts:
       - name: build

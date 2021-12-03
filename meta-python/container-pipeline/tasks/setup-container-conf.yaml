@@ -31,6 +31,8 @@ spec:
           echo "FORTRAN:forcevariable = \",fortran\"" >> conf/local.conf
           echo "IMAGE_FSTYPES = \"tar.gz container\"" >> conf/local.conf
           echo "PREFERRED_PROVIDER_virtual/kernel = \"linux-dummy\"" >> conf/local.conf
+          echo "BB_NUMBER_THREADS = \"8\"" >> conf/local.conf
+          echo "PARALLEL_MAKE = \"-j 8\"" >> conf/local.conf
         fi
       volumeMounts:
       - name: build
