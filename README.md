@@ -43,14 +43,11 @@ content.
    (e.g. if you want to make sure that an httpd deployment is exposed
    where you think it is)
 
-## Instructions for Setting Up Kubernetes and Tekton with CRI-O on Fedora
+## Instructions for Setting Up Kubernetes and Tekton with Containerd on Fedora
 
 The following steps are meant specifically for Fedora machines, but you
 should be able to build a cluster on other distros using a similar
-process. While cri-o is the runtime used for the Kubernetes cluster
-example given here, you should also still be able to use Docker or other
-tools such as Podman on the same system for manually building and
-running containers.
+process. 
 
 The instructions at
 [zews.org](https://www.zews.org/k8s-1-19-on-fedora-33-with-kubeadm-and-a-gpu/)
@@ -76,15 +73,10 @@ EOF
 ```
 2. Disable SELinux: `sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/'
    /etc/selinux/config`
-3. Enable cri-o nightly repo: 
-```
-dnf -y module enable cri-o:1.22
-dnf install -y cri-o
-```
 4. Install kubeadm, kubelet, kubectl: `dnf  install -y
    --disableexcludes=kubernetes kubelet kubeadm kubectl
 `
-5. Enable cri-o and kubelet on boot: `systemctl enable cri-o && sudo
+5. Enable containerd and kubelet on boot: `systemctl enable --now containerd && sudo
    systemctl enable kubelet
 `
 6. Set the cgroup driver: `echo
@@ -115,7 +107,7 @@ EOF
 13. Reboot the system
 14. Initialize the cluster: `kubeadm init
     --pod-network-cidr=10.244.0.0/16
---cri-socket=/var/run/crio/crio.sock`
+--cri-socket=/var/run/containerd/containerd.sock`
 15. `mkdir -p $HOME/.kube`
     `sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config`
     `sudo chown $(id -u):$(id -g) $HOME/.kube/config`
@@ -225,30 +217,6 @@ Tekton Dashboard allow viewing of the in-progress or complete pipelines.
   parts to the chart difficult):
   https://github.com/helm/helm/issues/3348
 
-## Frequently Asked Questions
-
-1. **Why Use kubeadm and not Minikube (or another tool)?**
-
-Minikube is great for getting one's feet wet with Kubernetes and Tekton,
-but the extra work required to expand it to a more versatile cluster
-using more of the production-ready resources available to the community
-made it unviable for this project. kubeadm was the first of the
-alternatives that the developers had success with, and the documentation
-is reasonably plentiful. That being said, if you would like to try out
-the resources found here on another platform, we would appreciate any
-information about additional setup requirements and quirks.
-
-2. **Why Turn Off Swap For Kubernetes?**
-
-This is a complicated topic, but basically it seems that if swap were to
-be enabled, it'd be much harder to guarantee consistent performance for
-k8s pods. In lieu of swap, pods should have their resource requirements
-met ahead of time. It is possible to run with swap by using the
-`--fail-swap-on=false` flag when first configuring the cluster, but sane
-and stable results are not guaranteed. See [this
-link](https://github.com/kubernetes/kubernetes/issues/53533) for more
-info.
-
 ## To-Do
 
 - Better patch queue/identification for meta-python and poky pipelines
@@ -256,7 +224,6 @@ info.
   Catalog](https://github.com/tektoncd/catalog)
 - Get QEMU working in the testimage container
   - Do it with KVM and tap/tun
-- Figure out Tanka/Helm for entire sstate deployment + pipelines
 
 ## Credits
 
