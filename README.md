@@ -4,14 +4,14 @@ Table of Contents
 =================
 
 * [yocto-tekton](#yocto-tekton)
+* [Table of Contents](#table-of-contents)
    * [Overview](#overview)
    * [Dockerfiles](#dockerfiles)
-   * [Instructions for Setting Up Kubernetes and Tekton with CRI-O on Fedora](#instructions-for-setting-up-kubernetes-and-tekton-with-cri-o-on-fedora)
+   * [Setup Instructions](#setup-instructions)
    * [The meta-python Pipeline](#the-meta-python-pipeline)
       * [Overview and Usage](#overview-and-usage)
       * [The nettools Pod](#the-nettools-pod)
       * [Notes/Lessons Learned](#noteslessons-learned)
-   * [Frequently Asked Questions](#frequently-asked-questions)
    * [To-Do](#to-do)
    * [Credits](#credits)
 
