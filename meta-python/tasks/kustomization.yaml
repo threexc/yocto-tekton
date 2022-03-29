@@ -1,0 +1,7 @@
+resources:
+  - update-workspace.yaml
+  - setup-conf.yaml
+  - build-patches.yaml
+  - build-packagegroup.yaml
+  - build-ptest-container.yaml
+  - run-ptest.yaml

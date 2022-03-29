@@ -16,7 +16,8 @@ Before applying any of this, make sure that you create the directories
  ./certs/registry.key -x509 -days 365 -out ./certs/registry.crt`
 
  The registry name should match the master node's name, e.g.
- yow-tgamblin-fedora2:31320.
+ yow-tgamblin-fedora2:31320 or 192.168.0.128:31320. The build-and-push-ptest-container
+ and run-ptest tasks will also need to be updated with your chosen IP/hostname.
 
  Note that if you are running a cluster with multiple nodes, you will
  need to perform some extra steps (such as the NFS suggestion in the

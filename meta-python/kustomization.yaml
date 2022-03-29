@@ -1,0 +1,14 @@
+bases:
+  - tasks
+
+resources:
+  - cronjob.yaml
+  - eventlistener.yaml
+  - namespace.yaml
+  - pipeline.yaml
+  - registry.yaml
+  - registry_service.yaml
+  - serviceaccount.yaml
+  - trigger_template.yaml
+
+namespace: meta-python

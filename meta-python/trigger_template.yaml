@@ -2,16 +2,16 @@
 apiVersion: triggers.tekton.dev/v1alpha1
 kind: TriggerTemplate
 metadata:
-  name: meta-python-container-build-template
+  name: meta-python-nightly-template
 spec:
   resourcetemplates:
   - apiVersion: tekton.dev/v1beta1
     kind: PipelineRun
     metadata:
-      generateName: meta-python-container-pipeline-run-
+      generateName: meta-python-nightly-
     spec:
       pipelineRef:
-        name: meta-python-container-pipeline
+        name: meta-python-nightly
       timeout: "3h"
       podTemplate:
         volumes:

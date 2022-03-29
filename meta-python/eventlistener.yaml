@@ -1,0 +1,16 @@
+---
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: EventListener
+metadata:
+  name: meta-python-listener
+spec:
+  serviceAccountName: tekton-triggers-sa
+  triggers:
+    - name: meta-python-nightly
+      template:
+        ref: meta-python-nightly-template
+      interceptors:
+        - cel:
+            filter: >-
+              'trigger_template' in body &&
+              body['trigger_template'] == 'nightly'

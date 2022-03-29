@@ -1,4 +1,0 @@
-resources:
-  - setup-container-conf.yaml
-  - build-ptest-container.yaml
-  - run-ptest.yaml

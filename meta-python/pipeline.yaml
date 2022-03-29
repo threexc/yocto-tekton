@@ -1,24 +1,34 @@
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
-  name: meta-python-container-pipeline
+  name: meta-python-nightly
 spec:
   tasks:
   - name: update-workspace
     taskRef:
       name: meta-python-update-workspace
-  - name: setup-container-conf
+  - name: setup-conf
     taskRef:
-      name: meta-python-setup-container-conf
+      name: meta-python-setup-conf
     runAfter:
       - update-workspace
+  - name: build-patches
+    taskRef:
+      name: meta-python-build-patches
+    runAfter:
+      - setup-conf
+  - name: build-packagegroup
+    taskRef:
+      name: meta-python-build-packagegroup
+    runAfter:
+      - build-patches
   - name: build-ptest-container
     taskRef:
       name: meta-python-build-ptest-container
     runAfter:
-      - setup-container-conf
+      - build-packagegroup
   - name: run-ptest
     taskRef:
-      name: meta-python-run-ptest-container
+      name: meta-python-run-ptest
     runAfter:
       - build-ptest-container

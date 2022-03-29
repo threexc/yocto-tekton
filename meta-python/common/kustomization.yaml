@@ -1,9 +1,0 @@
-bases:
-  - tasks
-  - serviceaccount
-
-resources:
-  - namespace.yaml
-  - eventlistener.yaml
-
-namespace: meta-python
