@@ -12,11 +12,13 @@ Before applying any of this, make sure that you create the directories
 /opt/certs and /opt/registry, and generate certs for the registry:
 
 `cd /opt`
-`sudo openssl req -newkey rsa:4096 -nodes -sha256 -keyout \
- ./certs/registry.key -x509 -days 365 -out ./certs/registry.crt`
+`sudo openssl req -newkey rsa:4096 -nodes -sha256 -keyout  ./certs/registry.key -x509 -days 365 -out ./certs/registry.crt -addext "subjectAltName = DNS:yow-fedora-builder1"`
+`sudo cp /opt/certs/registry.crt /etc/pki/ca-trust/source/anchors/`
+`sudo update-ca-trust`
+`sudo systemctl restart containerd`
 
  The registry name should match the master node's name, e.g.
- yow-tgamblin-fedora2:31320 or 192.168.0.128:31320. The build-and-push-ptest-container
+ yow-fedora-builder1. The build-and-push-ptest-container
  and run-ptest tasks will also need to be updated with your chosen IP/hostname.
 
  Note that if you are running a cluster with multiple nodes, you will
