@@ -1,4 +1,4 @@
-FROM fedora:34
+FROM fedora:36
 
 MAINTAINER Trevor Gamblin <tvgamblin@gmail.com>
 
