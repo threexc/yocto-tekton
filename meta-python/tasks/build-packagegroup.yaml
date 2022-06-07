@@ -6,7 +6,7 @@ metadata:
 spec:
   steps:
     - name: build-packagegroup
-      image: registry.hub.docker.com/threexc/yocto-builder:34
+      image: registry.hub.docker.com/threexc/yocto-builder:36
       workingDir: /workspace
       script: |
         #!/bin/bash -e

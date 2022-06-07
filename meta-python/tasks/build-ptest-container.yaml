@@ -6,7 +6,7 @@ metadata:
 spec:
   steps:
     - name: build-ptest-image
-      image: registry.hub.docker.com/threexc/yocto-builder:34
+      image: registry.hub.docker.com/threexc/yocto-builder:36
       workingDir: /workspace
       script: |
         #!/bin/bash -e
@@ -28,7 +28,7 @@ spec:
       command:
       - /kaniko/executor
       args:
-      - --destination=yow-fedora-builder1:31320/meta-python-ptest-image:latest
+      - --destination=megalith:31320/meta-python-ptest-image:latest
       - --context=dir:///workspace/poky/build/tmp/deploy/images/qemux86-64/
       - --dockerfile=/workspace/poky/build/tmp/deploy/images/qemux86-64/Dockerfile
       - --skip-tls-verify

@@ -7,7 +7,7 @@ metadata:
 spec:
   steps:
     - name: setup-workspace
-      image: registry.hub.docker.com/threexc/yocto-builder:34
+      image: registry.hub.docker.com/threexc/yocto-builder:36
       workingDir: /workspace
       script: |
         #!/bin/bash -e
@@ -24,12 +24,12 @@ spec:
 
         if [ ! -d "poky" ]; then
             echo "Cloning poky repo..."
-            git clone git://git.yoctoproject.org/poky
+            git clone https://git.yoctoproject.org/poky
         fi
 
         if [ ! -d "meta-openembedded" ]; then
             echo "Cloning meta-openembedded repo..."
-            git clone git://git.openembedded.org/meta-openembedded
+            git clone https://git.openembedded.org/meta-openembedded
         fi
 
         if [ ! -d "yocto-tekton" ]; then
@@ -41,7 +41,7 @@ spec:
         mountPath: /workspace
 
     - name: update-repos
-      image: registry.hub.docker.com/threexc/yocto-builder:34
+      image: registry.hub.docker.com/threexc/yocto-builder:36
       workingDir: /workspace
       script: |
         #!/bin/bash -e
