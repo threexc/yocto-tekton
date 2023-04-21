@@ -1,4 +1,4 @@
-# Fedora 35 Setup Instructions
+# Fedora 37 Setup Instructions
 
 These instructions are based on the ones at [zews.org](https://www.zews.org/k8s-1-19-on-fedora-33-with-kubeadm-and-a-gpu/), combined with the [kubeadm installation instructions](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/), but with some changes for a flannel-based single-node setup.
 
@@ -10,20 +10,20 @@ name=Kubernetes
 baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-\$basearch
 enabled=1
 gpgcheck=1
-repo_gpgcheck=1
-gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg
-https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+repo_gpgcheck=0
+gpgkey=https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
 exclude=kubelet kubeadm kubectl
 EOF
 ```
+Note that repo\_gpgcheck is set to 0. There is a bug with the GPG check and their repo. See: https://github.com/kubernetes/kubernetes/issues/110667
 2. Set SELinux to permissive:
 `
 sudo sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
 `   
-3. Install containerd: `sudo dnf install -y containerd`
-4. Install kubeadm, kubelet, kubectl: `sudo dnf install -y --disableexcludes=kubernetes kubelet kubeadm kubectl`
-5. Enable containerd and kubelet: `sudo systemctl enable --now containerd && sudo systemctl enable kubelet`
-6. Set the cgroup driver: `echo "KUBELET_EXTRA_ARGS=--cgroup-driver=systemd" | sudo tee /etc/sysconfig/kubelet`
+3. Install cri-o: `sudo dnf install -y cri-o`
+4. Modify /etc/cni/net.d/100-crio-bridge.conf and change the first "subnet" to "10.244.0.0/16"
+5. Install kubeadm, kubelet, kubectl: `sudo dnf install -y --disableexcludes=kubernetes kubelet kubeadm kubectl`
+6. Enable containerd and kubelet: `sudo systemctl enable --now containerd && sudo systemctl enable kubelet`
 7. Enable required modules on boot: 
 
 ```
@@ -72,30 +72,24 @@ sudo mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 ```
-15. Remove taint from the master node (i.e. allow pods to start on master):
-`kubectl taint nodes --all node-role.kubernetes.io/master-`
+15. Remove taint from the control-plane node (i.e. allow pods to start on control-plane):
+`kubectl taint nodes --all node-role.kubernetes.io/control-plane-`
 
 16. Add flannel (allows network pods to run properly):
-`https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml`
+`kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml`
 
-17. Install golang (required for container networking plugins) and iproute-tc (required for kubeadm init):
-`sudo dnf install -y golang iproute-tc`
+17. Install iproute-tc (required for kubeadm init):
+`sudo dnf install -y iproute-tc`
 
-18. Install the container networking plugins:
-```
-git clone https://github.com/containernetworking/plugins.git
-cd plugins
-./build_linux.sh
-sudo cp bin/* /opt/cni/bin
-```
-19. Copy (or link) /opt/cni/bin/flannel to /usr/libexec/cni/flannel (otherwise coredns pods will be stuck at ContainerCreating):
+18. Copy (or link) /opt/cni/bin/flannel to /usr/libexec/cni/flannel (otherwise coredns pods will be stuck at ContainerCreating):
 `sudo cp /opt/cni/bin/flannel /usr/libexec/cni/`
-20. Install Tekton components:
+
+19. Install Tekton components:
 ```
 kubectl apply --filename https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml
 kubectl apply --filename https://storage.googleapis.com/tekton-releases/triggers/latest/release.yaml
 kubectl apply --filename https://storage.googleapis.com/tekton-releases/triggers/latest/interceptors.yaml
-kubectl apply --filename https://github.com/tektoncd/dashboard/releases/latest/download/tekton-dashboard-release.yaml
+kubectl apply --filename https://storage.googleapis.com/tekton-releases/dashboard/latest/release.yaml
 ```
-21. Make the Tekton Dashboard accessible externally by running the following and changing spec.type from "ClusterIP" to "NodePort":
+20. Make the Tekton Dashboard accessible externally by running the following and changing spec.type from "ClusterIP" to "NodePort":
 `kubectl edit svc tekton-dashboard -n tekton-pipelines`
